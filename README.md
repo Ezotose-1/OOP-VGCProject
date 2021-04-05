@@ -34,6 +34,6 @@ Team members :
    
 ### License
 ----
-Developped by CodeAndMakeItWorkAnyway programers
-Languages : C#
-Dublin, Dorset College
+Developped by CodeAndMakeItWorkAnyway programers  
+Languages : C#  
+Dublin, Dorset College  
