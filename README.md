@@ -26,13 +26,10 @@ OOP-VGCProject
 Team name : CodeAndMakeItWorkAnyway
 Team members : 
 
-  loicSchussler         Loic Schussler
-  
-  Ezotose-1             Pierre Blaess
-  
-  saguira               Julien Calisto
-  
-  AbyadhX               Hafid Housni
+  loicSchussler         Loic Schussler  
+  Ezotose-1             Pierre Blaess  
+  saguira               Julien Calisto  
+  AbyadhX               Hafid Housni  
   
    
 ### License
