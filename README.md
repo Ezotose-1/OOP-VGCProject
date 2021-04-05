@@ -20,6 +20,7 @@ OOP-VGCProject
    └─ launcheSettings.json
 └─ Views
    └─ ...     // Front-end views here
+appsettings.json
 ```
 
 ### Team
