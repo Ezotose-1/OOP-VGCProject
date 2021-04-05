@@ -8,6 +8,9 @@ Objective : Design and implement an application to register and manage courses, 
 git clone https://github.com/Ezotose-1/OOP-VGCProject.git
 ```
 
+### Subject
+https://github.com/Ezotose-1/OOP-VGCProject/blob/master/OOP_PROJECT.pdf
+
 
 ### File architecture
 ```
