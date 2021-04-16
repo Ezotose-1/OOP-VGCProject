@@ -164,7 +164,7 @@ namespace OOP_VGCProject.Controllers
                 };
 
                 if (await userManager.IsInRoleAsync(user, role.Name))
-                
+                {
                     userRoleViewModel.IsSelected = true;
                 }
                 else
