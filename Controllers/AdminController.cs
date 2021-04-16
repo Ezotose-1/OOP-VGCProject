@@ -64,7 +64,16 @@ namespace OOP_VGCProject.Controllers
             return View(roles);
         }
 
-            // HttpGet from it id to get the informations
+            // HttpGet to get the role's list
+        [HttpGet]
+        public IActionResult ListUsers()
+        {
+            var users = userManager.Users;
+            return View(users);
+        }
+
+
+        // HttpGet from it id to get the informations
         [HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
@@ -155,7 +164,7 @@ namespace OOP_VGCProject.Controllers
                 };
 
                 if (await userManager.IsInRoleAsync(user, role.Name))
-                {
+                
                     userRoleViewModel.IsSelected = true;
                 }
                 else
