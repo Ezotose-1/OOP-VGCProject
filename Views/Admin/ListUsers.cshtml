@@ -1,0 +1,114 @@
+﻿@model IEnumerable<OOP_VGCProject.DTO.UserListDTO>
+
+@{
+    ViewBag.Title = "All Users";
+}
+
+<h1>User management</h1>
+<a class="btn btn-primary mb-3" style="width:auto" asp-area="Identity" asp-page="/Account/Register">
+    Register new User
+</a>
+
+
+@if (Model.Any())
+{
+    <br />
+    <br />
+    <hr />
+    <h3> Admin </h3>
+    foreach (var user in Model)
+    {
+        if (user.Role == "Admin")
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    User : @user.Id
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@user.Email</h5>
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Admin" asp-action="SetUserAdmin"
+                       asp-route-id="@user.Id" class="btn btn-primary">
+                        Set Admin
+                    </a>
+                    <a asp-controller="Admin" asp-action="SetUserFaculty"
+                       asp-route-id="@user.Id" class="btn btn-primary">
+                        Set Faculty
+                    </a>
+                    <a asp-controller="Admin" asp-action="RemoveRole"
+                       asp-route-id="@user.Id" class="btn btn-danger">
+                        Remove Role
+                    </a>
+                </div>
+            </div>
+        }
+    }
+
+    <br />
+    <br />
+    <hr />
+    <h3> Faculty </h3>
+    foreach (var user in Model)
+    {
+        if (user.Role == "Faculty")
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    User : @user.Id
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@user.Email</h5>
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Admin" asp-action="SetUserAdmin"
+                       asp-route-id="@user.Id" class="btn btn-primary">
+                        Set Admin
+                    </a>
+                    <a asp-controller="Admin" asp-action="SetUserFaculty"
+                       asp-route-id="@user.Id" class="btn btn-primary">
+                        Set Faculty
+                    </a>
+                    <a asp-controller="Admin" asp-action="RemoveRole"
+                       asp-route-id="@user.Id" class="btn btn-danger">
+                        Remove Role
+                    </a>
+                </div>
+            </div>
+        }
+    }
+
+    <br />
+    <br />
+    <hr />
+    <h3> Student </h3>
+    foreach (var user in Model)
+    {
+        if (user.Role == null)
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    User : @user.Id
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@user.Email</h5>
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Admin" asp-action="SetUserAdmin"
+                       asp-route-id="@user.Id" class="btn btn-primary">
+                        Set Admin
+                    </a>
+                    <a asp-controller="Admin" asp-action="SetUserFaculty"
+                       asp-route-id="@user.Id" class="btn btn-primary">
+                        Set Faculty
+                    </a>
+                    <a asp-controller="Admin" asp-action="RemoveRole"
+                       asp-route-id="@user.Id" class="btn btn-danger">
+                        Remove Role
+                    </a>
+                </div>
+            </div>
+        }
+    }
+
+}
