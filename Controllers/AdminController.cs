@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OOP_VGCProject.Data;
 using OOP_VGCProject.DTO;
@@ -25,6 +26,7 @@ namespace OOP_VGCProject.Controllers
 
             // HttpGet to get the CreateRole view
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateRole()
         {
             return View();
@@ -32,6 +34,7 @@ namespace OOP_VGCProject.Controllers
 
             // HttpPost to add a new role from it model
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
             if (ModelState.IsValid)
@@ -61,6 +64,7 @@ namespace OOP_VGCProject.Controllers
 
             // HttpGet to get the role's list
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult ListRoles()
         {
             var roles = roleManager.Roles;
@@ -69,6 +73,7 @@ namespace OOP_VGCProject.Controllers
 
             // HttpGet to get the role's list
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult ListUsers()
         {
             var usersList = new List<IdentityUser>();
@@ -95,6 +100,7 @@ namespace OOP_VGCProject.Controllers
 
         // HttpGet from it id to get the informations
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditRole(string id)
         {
             // Find the role by Role ID
@@ -129,6 +135,7 @@ namespace OOP_VGCProject.Controllers
 
             // HttpPost to update the role's information
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             var role = await roleManager.FindByIdAsync(model.Id);
@@ -161,6 +168,7 @@ namespace OOP_VGCProject.Controllers
 
             // Set User Admin
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SetUserAdmin(string id)
         {
             var user = await userManager.FindByIdAsync(id);
@@ -173,6 +181,7 @@ namespace OOP_VGCProject.Controllers
 
             // Set User Faculty
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SetUserFaculty(string id)
         {
             var user = await userManager.FindByIdAsync(id);
@@ -186,6 +195,7 @@ namespace OOP_VGCProject.Controllers
 
             // Set User Faculty
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveRole(string id)
         {
             var user = await userManager.FindByIdAsync(id);
