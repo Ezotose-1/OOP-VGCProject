@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OOP_VGCProject.Data;
+using OOP_VGCProject.DTO;
 using OOP_VGCProject.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace OOP_VGCProject.Controllers
 {
+    // To remember : All useless password = Passw0rd_
     public class AdminController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -68,7 +71,24 @@ namespace OOP_VGCProject.Controllers
         [HttpGet]
         public IActionResult ListUsers()
         {
-            var users = userManager.Users;
+            var usersList = new List<IdentityUser>();
+            foreach (var u in userManager.Users)
+            {
+                usersList.Add(u);
+            }
+
+            var users = new List<UserListDTO>();
+            foreach (var user in usersList)
+            {
+                users.Add(new UserListDTO
+                            {
+                                Id = user.Id,
+                                Email = user.Email,
+                                Role = userManager.GetRolesAsync(user).Result.FirstOrDefault()
+                            }
+                         );
+            }
+
             return View(users);
         }
 
@@ -139,84 +159,40 @@ namespace OOP_VGCProject.Controllers
             }
         }
 
-            // HttpGet to get the users in the current Roles
+            // Set User Admin
         [HttpGet]
-        public async Task<IActionResult> EditUsersInRole(string roleId)
+        public async Task<IActionResult> SetUserAdmin(string id)
         {
-            ViewBag.roleId = roleId;
-
-            var role = await roleManager.FindByIdAsync(roleId);
-
-            if (role == null)
-            {
-                ViewBag.ErrorMessage = $"Role with Id = {roleId} cannot be found";
-                return View("NotFound");
-            }
-
-            var model = new List<UserRoleViewModel>();
-
-            foreach (var user in userManager.Users)
-            {
-                var userRoleViewModel = new UserRoleViewModel
-                {
-                    UserId = user.Id,
-                    UserName = user.UserName
-                };
-
-                if (await userManager.IsInRoleAsync(user, role.Name))
-                {
-                    userRoleViewModel.IsSelected = true;
-                }
-                else
-                {
-                    userRoleViewModel.IsSelected = false;
-                }
-                model.Add(userRoleViewModel);
-            }
-            return View(model);
+            var user = await userManager.FindByIdAsync(id);
+            await userManager.RemoveFromRoleAsync(user, "Admin");
+            await userManager.RemoveFromRoleAsync(user, "Student");
+            await userManager.RemoveFromRoleAsync(user, "Faculty");
+            var result = await userManager.AddToRoleAsync(user, "Admin");
+            return RedirectToAction("ListUsers", new { Id = id });
         }
 
-            // HttpPost to modify the users in the current Roles
-        [HttpPost]
-        public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)
+            // Set User Faculty
+        [HttpGet]
+        public async Task<IActionResult> SetUserFaculty(string id)
         {
-            var role = await roleManager.FindByIdAsync(roleId);
+            var user = await userManager.FindByIdAsync(id);
+            await userManager.RemoveFromRoleAsync(user, "Admin");
+            await userManager.RemoveFromRoleAsync(user, "Student");
+            await userManager.RemoveFromRoleAsync(user, "Faculty");
+            var result = await userManager.AddToRoleAsync(user, "Faculty");
+            var roles = userManager.GetRolesAsync(user);
+            return RedirectToAction("ListUsers", new { Id = id });
+        }
 
-            if (role == null)
-            {
-                ViewBag.ErrorMessage = $"Role with Id = {roleId} cannot be found";
-                return View("NotFound");
-            }
-
-            for (int i = 0; i < model.Count; i++)
-            {
-                var user = await userManager.FindByIdAsync(model[i].UserId);
-
-                IdentityResult result = null;
-
-                if (model[i].IsSelected && !(await userManager.IsInRoleAsync(user, role.Name)))
-                {
-                    result = await userManager.AddToRoleAsync(user, role.Name);
-                }
-                else if (!model[i].IsSelected && await userManager.IsInRoleAsync(user, role.Name))
-                {
-                    result = await userManager.RemoveFromRoleAsync(user, role.Name);
-                }
-                else
-                {
-                    continue;
-                }
-
-                if (result.Succeeded)
-                {
-                    if (i < (model.Count - 1))
-                        continue;
-                    else
-                        return RedirectToAction("EditRole", new { Id = roleId });
-                }
-            }
-
-            return RedirectToAction("EditRole", new { Id = roleId });
+            // Set User Faculty
+        [HttpGet]
+        public async Task<IActionResult> RemoveRole(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            await userManager.RemoveFromRoleAsync(user, "Admin");
+            await userManager.RemoveFromRoleAsync(user, "Student");
+            await userManager.RemoveFromRoleAsync(user, "Faculty");
+            return RedirectToAction("ListUsers", new { Id = id });
         }
     }
 }
