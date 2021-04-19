@@ -73,11 +73,11 @@ body {
     </header>
 
 
-            <!--    SIDEBAR     -->
+    <!--    SIDEBAR     -->
     <div class="sidenav border-right border-top box-shadow">
         <a asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
         <a href="#">Schedule</a>
-        <a href="#">Courses</a>
+        <a asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
         <a href="#">Grade Book</a>
         <a href="#">Exams</a>
     </div>

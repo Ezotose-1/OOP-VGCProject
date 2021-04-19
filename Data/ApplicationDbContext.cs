@@ -19,5 +19,6 @@ namespace OOP_VGCProject.Data
         public static IQueryable<IdentityUser> AspNetUsers { get; internal set; }
         //public DbSet<ApplicationUser> AspNetUsers { get; set; }
 
+        public DbSet<Course> Courses { get; set; }
     }
 }
