@@ -16,7 +16,7 @@ namespace OOP_VGCProject.Data
         {
         }
         public DbSet<OOP_VGCProject.Models.Fees> Fees { get; set; }
-
+        public DbSet<OOP_VGCProject.Models.Grades> Grades { get; set; }
         public DbSet<OOP_VGCProject.Models.UserFee> UserFee { get; set; }
 
     }
