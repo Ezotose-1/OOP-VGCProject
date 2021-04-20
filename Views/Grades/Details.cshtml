@@ -1,0 +1,49 @@
+﻿@model OOP_VGCProject.Models.Grades
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/_ViewStart.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Grades</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Student_id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Student_id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.grade)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.grade)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.coefficient)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.coefficient)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.control_name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.control_name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Disipline)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Disipline)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Grade_id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
