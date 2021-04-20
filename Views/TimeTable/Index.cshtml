@@ -20,45 +20,70 @@
 
 <div id="dayTimeTable-grid">
 
-    <div></div>
-    <h6>8-9</h6>
-    <div id="8-9"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">8-9</h6>
+        <div class="dayTimeTable-courses-container" id="8-9"></div>
+    </div>
 
-    <h6>9-10</h6>
-    <div id="9-10"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">9-10</h6>
+        <div class="dayTimeTable-courses-container" id="9-10"></div>
+    </div>
 
-    <h6>10-11</h6>
-    <div id="10-11"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">10-11</h6>
+        <div class="dayTimeTable-courses-container" id="10-11"></div>
+    </div>
 
-    <h6>11-12</h6>
-    <div id="11-12"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">11-12</h6>
+        <div class="dayTimeTable-courses-container" id="11-12"></div>
+    </div>
 
-    <h6>12-13</h6>
-    <div id="12-13"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">12-13</h6>
+        <div class="dayTimeTable-courses-container" id="12-13"></div>
+    </div>
 
-    <h6>13-14</h6>
-    <div id="13-14"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">13-14</h6>
+        <div class="dayTimeTable-courses-container" id="13-14"></div>
+    </div>
 
-    <h6>14-15</h6>
-    <div id="14-15"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">14-15</h6>
+        <div class="dayTimeTable-courses-container" id="14-15"></div>
+    </div>
 
-    <h6>15-16</h6>
-    <div id="15-16"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">15-16</h6>
+        <div id="15-16"></div>
+    </div>
 
-    <h6>16-17</h6>
-    <div id="16-17"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">16-17</h6>
+        <div class="dayTimeTable-courses-container" id="16-17"></div>
+    </div>
 
-    <h6>17-18</h6>
-    <div id="17-18"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">17-18</h6>
+        <div class="dayTimeTable-courses-container" id="17-18"></div>
+    </div>
 
-    <h6>18-19</h6>
-    <div id="18-19"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">18-19</h6>
+        <div class="dayTimeTable-courses-container" id="18-19"></div>
+    </div>
 
-    <h6>19-20</h6>
-    <div id="19-20"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">19-20</h6>
+        <div class="dayTimeTable-courses-container" id="19-20"></div>
+    </div>
 
-    <h6>20-21</h6>
-    <div id="20-21"></div>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">20-21</h6>
+        <div class="dayTimeTable-courses-container" id="20-21"></div>
+    </div>
 </div>
 
 <div id="calendar">
@@ -123,6 +148,10 @@
 
 @section Styles{ 
     <style type="text/css">
+        body {
+            background-color: #ffe3de;
+        }
+
         .day{
             text-align:center;
         }
@@ -143,27 +172,32 @@
         }
 
         #dayTimeTable-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-            gap: 0px 0px;
-            grid-template-areas:
-                ". ."
-                ". ."
-                ". ."
-                ". ."
-                ". ."
-                ". ."
-                ". ."
-                ". .";
+            display: block;
+            background-color: #03506f;
         }
 
+        .dayTimeTable-timespan {
+            padding-top: 30px;
+            background-color: #a3ddcb;
+        }
+
+        .dayTimeTable-dispSpan{
+            position:relative;
+            text-align:center;
+
+        }
+
+        .dayTimeTable-courses-container{
+            position:relative;
+            text-align:center;
+        }
 
         .calendar-date{
             border-color: black;
         }
 
         .calendar-date-text {
+            position:center;
         }
         
     </style>
@@ -383,7 +417,10 @@
         //#region dayTimeTable init
         function activeDayTimeTable() {
             dayTimeTable = document.getElementById("dayTimeTable-grid");
-            dayTimeTable.style.display = "grid";
+            dayTimeTable.style.display = "block";
+            for (let i = 0; i < dailyCourses.length; i++) {
+                dailyCourses[i].innerHTML = "";
+            }
         }
 
         function inactiveDayTimeTable() {
@@ -501,6 +538,11 @@
                 activeDayTimeTable();
                 refreshDate();
 
+                let alreadyTouch = [];
+                for (let i = 0; i < dailyCourses.length; i++) {
+                    alreadyTouch.push(false);
+                }
+
                 for(let i = 0; i < @nbEvent; i++) {
 
                     let dateInformation = convertDate(eventSDates[i])
@@ -515,10 +557,16 @@
 
                         if (Shour >= 8 && Shour <= 20) {
                             let hourComp = dailyCourses[Shour - 8];
+                            alreadyTouch[Shour - 8] = true;
                             hourComp.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#" + colors[i] + "\">" + eventTitles[i] + " " + Stime + "</p>";
                         }
                     }
-                }
+                    for (let i = 0; i < alreadyTouch.length; i++) {
+                        if (!alreadyTouch[i])
+                            dailyCourses[i].innerHTML = "";
+                    }
+            }
+
         }
         //#endregion
 
