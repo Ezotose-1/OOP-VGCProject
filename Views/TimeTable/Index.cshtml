@@ -14,14 +14,54 @@
 <button id="thisMonthButton">This month</button>
 <button id="nextMonthButton">Next month</button>
 
-<div id="dayTimeTable"></div>
+<div id="Today">
+    <h4>@todayDate.Month @todayDate.Year</h4>
+</div>
+
+<div id="dayTimeTable-grid">
+
+    <div></div>
+    <h6>8-9</h6>
+    <div id="8-9"></div>
+
+    <h6>9-10</h6>
+    <div id="9-10"></div>
+
+    <h6>10-11</h6>
+    <div id="10-11"></div>
+
+    <h6>11-12</h6>
+    <div id="11-12"></div>
+
+    <h6>12-13</h6>
+    <div id="12-13"></div>
+
+    <h6>13-14</h6>
+    <div id="13-14"></div>
+
+    <h6>14-15</h6>
+    <div id="14-15"></div>
+
+    <h6>15-16</h6>
+    <div id="15-16"></div>
+
+    <h6>16-17</h6>
+    <div id="16-17"></div>
+
+    <h6>17-18</h6>
+    <div id="17-18"></div>
+
+    <h6>18-19</h6>
+    <div id="18-19"></div>
+
+    <h6>19-20</h6>
+    <div id="19-20"></div>
+
+    <h6>20-21</h6>
+    <div id="20-21"></div>
+</div>
 
 <div id="calendar">
-
-    <div id="Today">
-        <h4>@todayDate.Month @todayDate.Year</h4>
-    </div>
-
     <div id="calendar-grid">
         <div id="w1" class="day">
             Mo
@@ -45,7 +85,7 @@
             Su
         </div>
 
-        <button class="calendar-date" id="d1">1</button>
+        <button class="calendar-date" id="d1">1</button></a>
         <button class="calendar-date" id="d2">2</button>
         <button class="calendar-date" id="d3">3</button>
         <button class="calendar-date" id="d4">4</button>
@@ -87,6 +127,7 @@
             text-align:center;
         }
 
+
         #calendar-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -101,18 +142,37 @@
                 ". . . . . . .";
         }
 
+        #dayTimeTable-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            gap: 0px 0px;
+            grid-template-areas:
+                ". ."
+                ". ."
+                ". ."
+                ". ."
+                ". ."
+                ". ."
+                ". ."
+                ". .";
+        }
+
+
         .calendar-date{
             border-color: black;
         }
 
         .calendar-date-text {
         }
+        
     </style>
 }
 
 @section Scripts {
     <script type="text/javascript">
-        //#region init date variables 
+
+        //#region init date variables
         let todayDate = new Date();
 
         let todayDay = todayDate.getDate();
@@ -126,6 +186,8 @@
         let dispDay = todayDay;
         let dispMonth = todayMonth;
         let dispYear = todayYear;
+
+        let dailyCourses = [document.getElementById("8-9"), document.getElementById("9-10"), document.getElementById("10-11"), document.getElementById("11-12"), document.getElementById("12-13"), document.getElementById("13-14"), document.getElementById("14-15"), document.getElementById("15-16"), document.getElementById("16-17"), document.getElementById("17-18"), document.getElementById("18-19"), document.getElementById("19-20"), document.getElementById("20-21")];
 
         ThisMonth();
 
@@ -316,6 +378,27 @@
 
         //#region js functions
 
+        //#region component init
+
+        //#region dayTimeTable init
+        function activeDayTimeTable() {
+            dayTimeTable = document.getElementById("dayTimeTable-grid");
+            dayTimeTable.style.display = "grid";
+        }
+
+        function inactiveDayTimeTable() {
+            dayTimeTable = document.getElementById("dayTimeTable-grid");
+            dayTimeTable.style.display = "none";
+        }
+        //#endregion
+
+        //#region refresh Date
+        function refreshDate() {
+            let today = document.getElementById('Today');
+            today.innerHTML = "<h4>" + dispMonth + " " + dispYear + "</h4>";
+        }
+        //#endregion
+
         //#region calendar init
         function activeCalendar() {
             let calendar = document.getElementById('calendar');
@@ -330,8 +413,6 @@
         function initialiseCalendar() {
 
             activeCalendar();
-            let today = document.getElementById('Today');
-            today.innerHTML = "<h4>"+dispMonth+" "+dispYear+"</h4>"
 
             let dates = document.getElementsByClassName("calendar-date");
             for (let i = 0; i < dates.length; i++) {
@@ -339,9 +420,10 @@
             }
         }
         //#endregion
+        //#endregion
 
         //#region date operations
-       
+
         function convertDate(date)
         {
             let i = 0;
@@ -384,6 +466,16 @@
 
         }
 
+        function convertTimeToHour(time) {
+            let i = 0;
+            let hour = "";
+            while (time[i] != ':') {
+                hour += time[i];
+                i++;
+            }
+            return hour;
+        }
+
         function addMonthsUTC(date, count) {
             if (date && count) {
                 let m, d = (date = new Date(+date)).getUTCDate()
@@ -398,29 +490,35 @@
         //#endregion
 
         //#region function display day choose timetable
-        function DisplayDayTimetable(day,month,year) {
-            let colors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventThemesColors));
-            let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
-            let eventTitles =@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
+        function DisplayDayTimetable(day, month, year) {
+           
+                let colors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventThemesColors));
+                let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
+                let eventTitles =@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
 
-            inactiveCalendar();
+                inactiveCalendar();
 
-            let dayTimeTable = document.getElementById('dayTimeTable');
-            dayTimeTable.innerHTML = "";
+                activeDayTimeTable();
+                refreshDate();
 
-            for (let i = 0; i < @nbEvent; i++) {
+                for(let i = 0; i < @nbEvent; i++) {
 
-                let dateInformation = convertDate(eventSDates[i])
+                    let dateInformation = convertDate(eventSDates[i])
 
-                let Syear = dateInformation[0];
-                let Smonth = dateInformation[1];
-                let Sday = dateInformation[2];
-                let Stime = dateInformation[3];
+                    let Syear = dateInformation[0];
+                    let Smonth = dateInformation[1];
+                    let Sday = dateInformation[2];
+                    let Stime = dateInformation[3];
+                    let Shour = parseInt(convertTimeToHour(Stime));
 
-                if (Sday == day && Smonth == month && Syear == year) {
-                    dayTimeTable.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#" + colors[i] + "\">" + eventTitles[i] + " " + Stime + "</p>";
+                    if (Sday == day && Smonth == month && Syear == year) {
+
+                        if (Shour >= 8 && Shour <= 20) {
+                            let hourComp = dailyCourses[Shour - 8];
+                            hourComp.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#" + colors[i] + "\">" + eventTitles[i] + " " + Stime + "</p>";
+                        }
+                    }
                 }
-            }
         }
         //#endregion
 
@@ -432,9 +530,8 @@
             dispYear = todayYear;
 
             initialiseCalendar();
-
-            let daytimetable = document.getElementById('dayTimeTable');
-            daytimetable.innerHTML = "";
+            refreshDate();
+            inactiveDayTimeTable();
 
             let color = "";
 
@@ -469,8 +566,8 @@
 
             let color = "";
             initialiseCalendar();
-            let daytimetable = document.getElementById('dayTimeTable');
-            daytimetable.innerHTML = "";
+            refreshDate();
+            inactiveDayTimeTable();
 
             let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
                 let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
@@ -503,8 +600,8 @@
 
             let color = "";
             initialiseCalendar();
-            let daytimetable = document.getElementById('dayTimeTable');
-            daytimetable.innerHTML = "";
+            refreshDate();
+            inactiveDayTimeTable();
 
             let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
             let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
