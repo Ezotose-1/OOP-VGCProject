@@ -39,6 +39,44 @@ namespace OOP_VGCProject.Controllers
             return View(course);
         }
 
+
+
+        // GET: Courses/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([Bind("CourseId,CourseName,CourseDescription,StartingTime,EndingTime,GroupId")] Course course)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(course);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(course);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // GET : Courses/Delete/5
         [Authorize(Roles = "Admin, Faculty")]
         public async Task<IActionResult> Delete(int? id)
