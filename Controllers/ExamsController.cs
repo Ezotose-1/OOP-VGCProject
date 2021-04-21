@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,25 +17,41 @@ namespace OOP_VGCProject.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public ExamsController(ApplicationDbContext context)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
+
+
+        public ExamsController(ApplicationDbContext context,
+                              RoleManager<IdentityRole> roleManager,
+                              UserManager<IdentityUser> userManager)
         {
             _context = context;
+
+            _roleManager = roleManager;
+            _userManager = userManager;
+
         }
 
         // GET: Exams
         public async Task<IActionResult> Index()
         {
             var Exams = await _context.Exams.ToListAsync();
+            
+            bool isAdmin = User.IsInRole("Admin");
+            var user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            
             var ExamLst = new List<ExamsDTO>();
             foreach (var e in Exams)
             {
-                ExamLst.Add(new ExamsDTO
-                {
-                    Id = e.Id,
-                    ExamName = e.ExamName,
-                    Date = e.Date,
-                    Course = _context.Discipline.ToList().Find(c => c.Id == e.CourseId).CourseName
-                });
+                if (isAdmin || _context.UserDiscipline.ToList().Exists(d => d.DisciplineId == e.CourseId && d.UserId == user.Id)) {
+                    ExamLst.Add(new ExamsDTO
+                    {
+                        Id = e.Id,
+                        ExamName = e.ExamName,
+                        Date = e.Date,
+                        Course = _context.Discipline.ToList().Find(c => c.Id == e.CourseId).CourseName
+                    });
+                }
             }
             return View(ExamLst);
         }
