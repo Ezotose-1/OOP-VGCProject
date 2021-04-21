@@ -26,11 +26,10 @@ namespace OOP_VGCProject.Controllers
         public async Task<IActionResult> Index()
         {
             string loggedUserId = _userManager.GetUserId(User);
-            var GradeList = await _context.Grades.Where(m => m.Student_id == loggedUserId).ToListAsync();
-
+            var GradeList = await _context.Grades.Where(m => m.Student_id == loggedUserId).OrderBy(o => o.Discipline).ToListAsync();
             return View(GradeList);
         }
-
+        
         // GET: Grades/Details/5
         public async Task<IActionResult> Details(int? id)
         {

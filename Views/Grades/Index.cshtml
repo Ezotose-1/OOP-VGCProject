@@ -4,6 +4,22 @@
     ViewData["Title"] = "Index";
 }
 
+<style>
+    .Discipline {
+        background: rgb(0, 191, 255);
+    }
+
+    .Grade {
+    }
+    .Medium {
+        background: rgb(216, 191, 216);
+    }
+
+    .Medium_Discipline td:not(td:first-child) {
+        background: rgb(135, 206, 250);
+    }
+
+</style>
 <h1>Grades Book</h1>
 
 <p>
@@ -13,7 +29,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Disipline)
+                @Html.DisplayNameFor(model => model.Discipline)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.control_name)
@@ -27,27 +43,111 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Disipline)
-            </td>
-        <tr>
-            <td>
-                <!-- disipline -->
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.control_name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.coefficient)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.grade)
-            </td>
-        </tr>
 
-        </tr>
-}
+        @{ var Current_Discipline = "";
+            decimal Grade_Discipline = 0;
+            decimal coef_Discipline = 0;
+            decimal medium_Grade = 0;
+            decimal nb_Discipline = 0;
+            decimal Medium = 0;
+            foreach (var item in Model)
+            {
+                if (Current_Discipline != item.Discipline && Current_Discipline != "")
+                {
+                    Medium = Grade_Discipline / coef_Discipline;
+                    <tr class="Medium_Discipline">
+                        <td>
+                            <!-- disipline -->
+                        </td>
+                        <td>
+                            Medium
+                        </td>
+                        <td>
+                            <!-- coef -->
+                        </td>
+                        <td>
+                            @Medium.ToString("#.##")
+                        </td>
+                    </tr>
+                    Grade_Discipline = 0;
+                    coef_Discipline = 0;
+                    medium_Grade += Medium;
+                    nb_Discipline += 1;
+                }
+                if (Current_Discipline != item.Discipline)
+                {
+                    Current_Discipline = item.Discipline;
+                    <tr class="Discipline">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Discipline)
+                        </td>
+                        <td>
+                            <!-- control_name -->
+                        </td>
+                        <td>
+                            <!-- coefficient -->
+                        </td>
+                        <td>
+                            <!-- grade -->
+                        </td>
+                    </tr>
+
+                }
+                <tr class="Grade">
+                    <td>
+                        <!-- disipline -->
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.control_name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.coefficient)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.grade)
+                    </td>
+                </tr>
+                Grade_Discipline += item.grade * item.coefficient;
+                coef_Discipline += item.coefficient;
+            }
+            if (coef_Discipline != 0)
+            {
+                Medium = Grade_Discipline / coef_Discipline;
+                <tr class="Medium_Discipline">
+                    <td>
+                        <!-- disipline -->
+                    </td>
+                    <td>
+                        Medium
+                    </td>
+                    <td>
+                        <!-- coef -->
+                    </td>
+                    <td>
+                        @Medium.ToString("#.##")
+                    </td>
+                </tr>
+                Grade_Discipline = 0;
+                coef_Discipline = 0;
+                medium_Grade += Medium;
+                nb_Discipline += 1;
+            }
+            Medium = medium_Grade / nb_Discipline;
+            <tr class="Medium">
+                <td>
+                    Medium
+                </td>
+                <td>
+                    <!-- disipline -->
+
+                </td>
+                <td>
+                    <!-- disipline -->
+                </td>
+                <td>
+                    @Medium.ToString("#.##")
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
