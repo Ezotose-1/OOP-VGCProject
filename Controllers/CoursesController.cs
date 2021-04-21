@@ -39,5 +39,28 @@ namespace OOP_VGCProject.Controllers
             return View(course);
         }
 
+        // GET : Courses/Delete/5
+        [Authorize(Roles = "Admin, Faculty")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var course = await _context.Courses
+                                .SingleOrDefaultAsync(x => x.CourseId == id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return View(course);
+        }
+
+        // POST : Courses/Delete/5
+        [Authorize(Roles = "Admin, Faculty")]
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var course = await _context.Courses.SingleOrDefaultAsync(x => x.CourseId == id);
+            _context.Courses.Remove(course);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
