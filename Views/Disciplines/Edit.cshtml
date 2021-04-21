@@ -1,10 +1,14 @@
-﻿@model OOP_VGCProject.Models.Discipline
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@model OOP_VGCProject.DTO.DisciplineDTO
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Manage Discipline</h1>
 
 <h4>Discipline</h4>
 <hr />
@@ -12,11 +16,11 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="discipline.Id" />
             <div class="form-group">
-                <label asp-for="CourseName" class="control-label"></label>
-                <input asp-for="CourseName" class="form-control" />
-                <span asp-validation-for="CourseName" class="text-danger"></span>
+                <label asp-for="discipline.CourseName" class="control-label"></label>
+                <input asp-for="discipline.CourseName" class="form-control" />
+                <span asp-validation-for="discipline.CourseName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -25,6 +29,28 @@
     </div>
 </div>
 
+<br />
+<br />
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User in this discipline
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.UserIn)
+        {
+            <tr>
+                <td>
+                    @UserManager.FindByIdAsync(user.UserId).Result
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

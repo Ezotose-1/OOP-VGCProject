@@ -21,5 +21,8 @@ namespace OOP_VGCProject.Data
         public DbSet<OOP_VGCProject.Models.Exams> Exams { get; set; }
         public DbSet<OOP_VGCProject.Models.Discipline> Discipline { get; set; }
 
+        public DbSet<OOP_VGCProject.Models.UserDiscipline> UserDiscipline { get; set; }
+
+
     }
 }

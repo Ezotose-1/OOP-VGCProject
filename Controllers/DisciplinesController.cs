@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OOP_VGCProject.Data;
+using OOP_VGCProject.DTO;
 using OOP_VGCProject.Models;
 
 namespace OOP_VGCProject.Controllers
@@ -14,33 +16,23 @@ namespace OOP_VGCProject.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public DisciplinesController(ApplicationDbContext context)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public DisciplinesController(ApplicationDbContext context,
+                              RoleManager<IdentityRole> roleManager,
+                              UserManager<IdentityUser> userManager)
         {
             _context = context;
+
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         // GET: Disciplines
         public async Task<IActionResult> Index()
         {
             return View(await _context.Discipline.ToListAsync());
-        }
-
-        // GET: Disciplines/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var discipline = await _context.Discipline
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (discipline == null)
-            {
-                return NotFound();
-            }
-
-            return View(discipline);
         }
 
         // GET: Disciplines/Create
@@ -74,11 +66,18 @@ namespace OOP_VGCProject.Controllers
             }
 
             var discipline = await _context.Discipline.FindAsync(id);
+            var usersIn =  _context.UserDiscipline.Where(x => x.DisciplineId == id).ToList();
             if (discipline == null)
             {
                 return NotFound();
             }
-            return View(discipline);
+            var model = new DisciplineDTO
+            {
+                discipline = discipline,
+                UserIn = usersIn,
+                Users = _userManager.Users.ToList()
+            };
+            return View(model);
         }
 
         // POST: Disciplines/Edit/5
