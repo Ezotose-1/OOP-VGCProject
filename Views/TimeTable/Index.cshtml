@@ -4,7 +4,6 @@
     List<string> eventTitles = ViewBag.EventTitles;
     List<DateTime> eventStartingDates = ViewBag.EventStartingDates;
     List<DateTime> eventEndingDates = ViewBag.EventEndingDates;
-    List<string> eventThemesColors = ViewBag.EventThemesColors;
 
     int nbEvent = eventTitles.Count;
     DateTime todayDate = DateTime.Now;
@@ -205,7 +204,7 @@
 
 @section Scripts {
     <script type="text/javascript">
-
+        
         //#region init date variables
         let todayDate = new Date();
 
@@ -473,44 +472,26 @@
 
             let count = 0;
 
+            console.log(le);
             while (i < le) {
                 if (date[i] == '-' || date[i] == 'T') {
                     count++;
-                    i++;
                 }
                 else {
-                    if (date[i] == '.') {
-                        return [year, month, day, time];
-                    }
-
-                    switch (count) {
-                        case 0:
-                            year += date[i];
-                            break;
-                        case 1:
-                            month += date[i];
-                            break;
-                        case 2:
-                            day += date[i];
-                            break;
-                        case 3:
-                            time += date[i];
-                            break;
-                    }
-                    i++;
+                    if (count == 0)
+                        year += date[i];
+                    if (count == 1)
+                        month += date[i];
+                    if (count == 2)
+                        day += date[i];
+                    if (count == 3)
+                        time += date[i];
                 }
+                i++;  
             }
+            console.log([year, month, day, time]);
+            return [year, month, day, time];
 
-        }
-
-        function convertTimeToHour(time) {
-            let i = 0;
-            let hour = "";
-            while (time[i] != ':') {
-                hour += time[i];
-                i++;
-            }
-            return hour;
         }
 
         function addMonthsUTC(date, count) {
@@ -529,10 +510,11 @@
         //#region function display day choose timetable
         function DisplayDayTimetable(day, month, year) {
            
-                let colors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventThemesColors));
+          
                 let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
                 let eventTitles =@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
 
+                
                 inactiveCalendar();
 
                 activeDayTimeTable();
@@ -551,14 +533,14 @@
                     let Smonth = dateInformation[1];
                     let Sday = dateInformation[2];
                     let Stime = dateInformation[3];
-                    let Shour = parseInt(convertTimeToHour(Stime));
+                    let Shour = parseInt(Stime[0]+Stime[1]);
 
                     if (Sday == day && Smonth == month && Syear == year) {
-
+                        
                         if (Shour >= 8 && Shour <= 20) {
                             let hourComp = dailyCourses[Shour - 8];
                             alreadyTouch[Shour - 8] = true;
-                            hourComp.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#" + colors[i] + "\">" + eventTitles[i] + " " + Stime + "</p>";
+                            hourComp.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#FF0000\">" + eventTitles[i] + " " + Stime + "</p>";
                         }
                     }
                     for (let i = 0; i < alreadyTouch.length; i++) {
@@ -581,26 +563,23 @@
             refreshDate();
             inactiveDayTimeTable();
 
-            let color = "";
+            let color = "#FF0000";
 
             let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
             let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
             let eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
-            let eventColors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventThemesColors));
 
+            console.log(eventSDates);
             for (let i = 0; i < @nbEvent; i++) {
                 let r = convertDate(eventSDates[i]);
-
                 let Syear = r[0];
                 let Smonth = r[1];
                 let Sday = r[2];
                 let Stime = r[3];
-
+                
                 if (Smonth == todayMonth) {
                     let addEvent = document.getElementById("d" + Sday);
-
-                    color = eventColors[i];
-                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#" + color+"\">"+eventTitles[i] + " " + Stime +"</p>";
+                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:"+color+"\">"+eventTitles[i] + " " + Stime +"</p>";
                 }
             }
         }
@@ -620,8 +599,7 @@
             let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
                 let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
                 let eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
-                let eventColors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventThemesColors));
-
+              
             for (let i = 0; i < @nbEvent; i++) {
                 let r = convertDate(eventSDates[i]);
 
@@ -632,9 +610,7 @@
 
                 if (Smonth == dispMonth) {
                     let addEvent = document.getElementById("d" + Sday);
-
-                    color = eventColors[i];
-                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#" + color+"\">"+eventTitles[i] + " " + Stime +"</p>";
+                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:" + color + "\">" + eventTitles[i] + " " + Stime + "</p>";
                 }
             }
         }
@@ -654,8 +630,7 @@
             let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
             let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
             let eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
-            let eventColors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventThemesColors));
-
+           
             for (let i = 0; i < @nbEvent; i++) {
                 let r = convertDate(eventSDates[i]);
 
@@ -665,10 +640,9 @@
                 let Stime = r[3];
 
                 if (Smonth == dispMonth) {
-                    let addEvent = document.getElementById("d" + Sday);
+                    let addEvent = document.getElementById("d" + Sday)
 
-                    color = eventColors[i];
-                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#" + color+"\">"+eventTitles[i] + " " + Stime +"</p>";
+                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:" + color + "\">" + eventTitles[i] + " " + Stime + "</p>";
                 }
             }
 
