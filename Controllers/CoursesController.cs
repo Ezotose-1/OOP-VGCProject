@@ -29,5 +29,7 @@ namespace OOP_VGCProject.Controllers
             Course course = _context.Courses.Where(x => x.CourseId == id).SingleOrDefault();
             return View(course);
         }
+
+        //[Authorize(Roles = "Admin")]
     }
 }
