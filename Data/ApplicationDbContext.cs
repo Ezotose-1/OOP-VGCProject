@@ -15,9 +15,9 @@ namespace OOP_VGCProject.Data
             : base(options)
         {
         }
-
-        public static IQueryable<IdentityUser> AspNetUsers { get; internal set; }
-        //public DbSet<ApplicationUser> AspNetUsers { get; set; }
+        public DbSet<OOP_VGCProject.Models.Fees> Fees { get; set; }
+        public DbSet<OOP_VGCProject.Models.Grades> Grades { get; set; }
+        public DbSet<OOP_VGCProject.Models.UserFee> UserFee { get; set; }
 
     }
 }

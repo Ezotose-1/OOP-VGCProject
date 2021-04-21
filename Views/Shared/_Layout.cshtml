@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -72,15 +76,18 @@ body {
         </nav>
     </header>
 
-
+    @if (SignInManager.IsSignedIn(User))
+    {
             <!--    SIDEBAR     -->
     <div class="sidenav border-right border-top box-shadow">
         <a asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
+        <a asp-controller="Fees" asp-action="Index">Payment</a>
         <a href="#">Schedule</a>
         <a href="#">Courses</a>
         <a href="#">Grade Book</a>
         <a href="#">Exams</a>
     </div>
+    }
 
     <div class="container">
         <main role="main" class="pb-3">
