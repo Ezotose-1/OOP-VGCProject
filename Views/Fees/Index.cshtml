@@ -48,7 +48,7 @@
                     }
                     else
                     {
-                        <a asp-action="Pay" asp-route-id="@item.Fee.Id">Pay</a> <br />
+                        <a asp-action="Pay" asp-route-id="@item.Fee.Id" class="btn btn-primary">Pay</a> <br />
                     }
                     @if (User.IsInRole("Admin"))
                     {
