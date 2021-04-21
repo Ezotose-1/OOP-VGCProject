@@ -8,7 +8,6 @@ namespace OOP_VGCProject.Models
 {
     public class Discipline
     {
-        [Key]
         public int Id { get; set; }
         public string CourseName { get; set; }
     }
