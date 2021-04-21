@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OOP_VGCProject.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace OOP_VGCProject.Controllers
 {
@@ -17,19 +19,25 @@ namespace OOP_VGCProject.Controllers
             _context = context;
         }
 
-        //GET : Courses
-        public ActionResult Index()
+        // GET : Courses
+        public async Task<IActionResult> Index()
         {
-            var courses = _context.Courses.ToList();
-            return View(courses);
+            var courses = _context.Courses;
+            return View(await courses.ToListAsync());
         }
 
+
+        // GET : Courses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            Course course = _context.Courses.Where(x => x.CourseId == id).SingleOrDefault();
+            var course = await _context.Courses
+                    .SingleOrDefaultAsync(x => x.CourseId == id);
+            if (course == null)
+            {
+                return NotFound();
+            }
             return View(course);
         }
 
-        //[Authorize(Roles = "Admin")]
     }
 }
