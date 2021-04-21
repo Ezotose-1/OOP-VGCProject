@@ -2,10 +2,9 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/_ViewStart.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Grades Book</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -14,46 +13,40 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Student_id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.grade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.coefficient)
+                @Html.DisplayNameFor(model => model.Disipline)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.control_name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Disipline)
+                @Html.DisplayNameFor(model => model.coefficient)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.grade)
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Student_id)
+                @Html.DisplayFor(modelItem => item.Disipline)
             </td>
+        <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.grade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.coefficient)
+                <!-- disipline -->
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.control_name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Disipline)
+                @Html.DisplayFor(modelItem => item.coefficient)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Grade_id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Grade_id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Grade_id">Delete</a>
+                @Html.DisplayFor(modelItem => item.grade)
             </td>
+        </tr>
+
         </tr>
 }
     </tbody>

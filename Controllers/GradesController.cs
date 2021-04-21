@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,16 +14,21 @@ namespace OOP_VGCProject.Controllers
     public class GradesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public GradesController(ApplicationDbContext context)
+        public GradesController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Grades
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Grades.ToListAsync());
+            string loggedUserId = _userManager.GetUserId(User);
+            var GradeList = await _context.Grades.Where(m => m.Student_id == loggedUserId).ToListAsync();
+
+            return View(GradeList);
         }
 
         // GET: Grades/Details/5
