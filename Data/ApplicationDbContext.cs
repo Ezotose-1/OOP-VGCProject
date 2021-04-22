@@ -19,6 +19,8 @@ namespace OOP_VGCProject.Data
         public DbSet<OOP_VGCProject.Models.Grades> Grades { get; set; }
         public DbSet<OOP_VGCProject.Models.UserFee> UserFee { get; set; }
         public DbSet<OOP_VGCProject.Models.Course> Courses { get; set; }
+        public DbSet<OOP_VGCProject.Models.Group> Groups { get; set; }
+        public DbSet<OOP_VGCProject.Models.GroupStudentList> GroupStudentLists {get;set;}
 
     }
 }

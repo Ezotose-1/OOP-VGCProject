@@ -15,6 +15,7 @@ namespace OOP_VGCProject.Models
         public int FacultyId { get; set; }
         public DateTime StartingTime { get; set; }
         public DateTime EndingTime { get; set; }
-        public int GroupId { get; set; }
+        public string GroupId { get; set; }
+        public int DisciplineId { get; set; }
     }
 }

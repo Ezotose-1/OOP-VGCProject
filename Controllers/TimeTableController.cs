@@ -30,15 +30,24 @@ namespace OOP_VGCProject.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var Cours = _context.Courses.ToList();
-           
+            
             List<string> Titles = new List<string>();
             List<string> Descriptions = new List<string>();
             List<DateTime> StartingDates = new List<DateTime>();
             List<DateTime> EndingDates = new List<DateTime>();
             List<string> ThemesColors = new List<string>();
 
-            foreach(var cours in Cours)
+            var groupsListsQ = _context.GroupStudentLists.Where(x => x.StudentId == _userManager.GetUserAsync(HttpContext.User).Id).ToList();
+            List<string> groupIdWhereUserIs = new List<string>();
+            foreach(var group in groupsListsQ)
+            {
+                groupIdWhereUserIs.Add(group.GroupId);
+            }
+
+            var coursesQ = _context.Courses.Where(x => groupIdWhereUserIs.Contains(x.GroupId));
+            
+
+            foreach(var cours in coursesQ)
             {
                 Titles.Add(cours.CourseName);
                 Descriptions.Add(cours.CourseDescription);
@@ -53,7 +62,6 @@ namespace OOP_VGCProject.Controllers
 
             return View();
         }
-
 
         public void DisplayEvents()
         {
