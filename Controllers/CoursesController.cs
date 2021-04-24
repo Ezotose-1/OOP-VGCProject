@@ -50,7 +50,7 @@ namespace OOP_VGCProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("CourseId,CourseName,CourseDescription,StartingTime,EndingTime,GroupId")] Course course)
+        public async Task<IActionResult> Create([Bind("CourseId,CourseName,CourseDescription,StartingTime,EndingTime,GroupId,DisciplineId")] Course course)
         {
             if (ModelState.IsValid)
             {

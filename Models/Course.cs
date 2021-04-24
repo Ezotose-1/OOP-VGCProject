@@ -30,17 +30,21 @@ namespace OOP_VGCProject.Models
         [Required]
         [Display(Name = "Start")]
         [BindProperty]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime StartingTime { get; set; }
 
         [Required]
         [Display(Name = "End")]
         [BindProperty]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime EndingTime { get; set; }
 
         [Required]
         [Display(Name = "Group")]
         public string GroupId { get; set; }
+
+        [Required]
+        [Display(Name = "DisciplineId")]
+        public int DisciplineId { get; set; }
     }
 }
