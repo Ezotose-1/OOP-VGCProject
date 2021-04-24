@@ -41,6 +41,6 @@ namespace OOP_VGCProject.Models
 
         [Required]
         [Display(Name = "Group")]
-        public int GroupId { get; set; }
+        public string GroupId { get; set; }
     }
 }

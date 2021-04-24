@@ -1,0 +1,59 @@
+@model OOP_VGCProject.Models.Course
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Course</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CourseId" />
+            <div class="form-group">
+                <label asp-for="CourseId" class="control-label"></label>
+                <div>@Html.DisplayFor(model => model.CourseId)</div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseName" class="control-label"></label>
+                <input asp-for="CourseName" class="form-control" />
+                <span asp-validation-for="CourseName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseDescription" class="control-label"></label>
+                <input asp-for="CourseDescription" class="form-control" />
+                <span asp-validation-for="CourseDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartingTime" class="control-label"></label>
+                <input asp-for="StartingTime" class="form-control" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local"/>
+                <span asp-validation-for="StartingTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndingTime" class="control-label"></label>
+                <input asp-for="EndingTime" class="form-control" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local"/>
+                <span asp-validation-for="EndingTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GroupId" class="control-label"></label>
+                <input asp-for="GroupId" class="form-control" />
+                <span asp-validation-for="GroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
