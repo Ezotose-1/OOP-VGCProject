@@ -46,5 +46,9 @@ namespace OOP_VGCProject.Models
         [Required]
         [Display(Name = "DisciplineId")]
         public int DisciplineId { get; set; }
+
+        [Required]
+        [Display(Name = "Discipline")]
+        public virtual Discipline Discipline { get; set; }
     }
 }

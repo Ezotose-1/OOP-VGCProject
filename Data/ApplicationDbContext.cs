@@ -20,5 +20,6 @@ namespace OOP_VGCProject.Data
         //public DbSet<ApplicationUser> AspNetUsers { get; set; }
 
         public DbSet<Course> Courses { get; set; }
+        public DbSet<Discipline> Discipline {get; set;}
     }
 }

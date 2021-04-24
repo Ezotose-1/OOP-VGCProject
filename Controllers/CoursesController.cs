@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using OOP_VGCProject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace OOP_VGCProject.Controllers
 {
@@ -22,7 +23,8 @@ namespace OOP_VGCProject.Controllers
         // GET : Courses
         public async Task<IActionResult> Index()
         {
-            var courses = _context.Courses;
+            var courses = _context.Courses
+                    .Include(c => c.Discipline);
             return View(await courses.ToListAsync());
         }
 
@@ -34,6 +36,7 @@ namespace OOP_VGCProject.Controllers
                 return NotFound();
             }
             var course = await _context.Courses
+                    .Include(c => c.Discipline)
                     .SingleOrDefaultAsync(x => x.CourseId == id);
             if (course == null)
             {
@@ -42,10 +45,18 @@ namespace OOP_VGCProject.Controllers
             return View(course);
         }
 
+        private void PopulateDisciplineDropDownList(object selectedDiscipline = null)
+        {
+            var disciplineQuery = from d in _context.Discipline
+                                  orderby d.CourseName
+                                  select d;
+            ViewBag.DisciplineId = new SelectList(disciplineQuery.AsNoTracking(), "DisciplineId", "CourseName", selectedDiscipline);
+        }
 
         // GET: Courses/Create
         public IActionResult Create()
         {
+            PopulateDisciplineDropDownList();
             return View();
         }
 
@@ -58,6 +69,7 @@ namespace OOP_VGCProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            PopulateDisciplineDropDownList(course.DisciplineId);
             return View(course);
         }
 
@@ -75,7 +87,7 @@ namespace OOP_VGCProject.Controllers
             {
                 return NotFound();
             }
-
+            PopulateDisciplineDropDownList(course.DisciplineId);
             return View(course);
         }
 
@@ -93,7 +105,8 @@ namespace OOP_VGCProject.Controllers
             if (await TryUpdateModelAsync<Course>(courseToUpdate,
                 "",
                 c => c.CourseName, c => c.CourseDescription, 
-                c => c.StartingTime, c => c.EndingTime, c => c.GroupId))
+                c => c.StartingTime, c => c.EndingTime, c => c.GroupId,
+                c => c.DisciplineId))
             {
                 try
                 {
@@ -108,6 +121,7 @@ namespace OOP_VGCProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            PopulateDisciplineDropDownList(courseToUpdate.DisciplineId);
             return View(courseToUpdate);
         }
 
@@ -120,6 +134,8 @@ namespace OOP_VGCProject.Controllers
                 return NotFound();
             }
             var course = await _context.Courses
+                                .Include(c => c.Discipline)
+                                .AsNoTracking()
                                 .SingleOrDefaultAsync(x => x.CourseId == id);
             if (course == null)
             {
