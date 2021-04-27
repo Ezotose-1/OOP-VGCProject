@@ -17,6 +17,10 @@ https://github.com/Ezotose-1/OOP-VGCProject/blob/master/OOP_PROJECT.pdf
 OOP-VGCProject
 └─ Controllers
    └─ ...     // Views controllers here
+└─ Data
+   └─ ApplicationDbContext.cs     // To connect to the DB
+└─ Migrations
+   └─ ...     // Original migrations here
 └─ Models
    └─ ...     // Models for controllers here
 └─ Properties
