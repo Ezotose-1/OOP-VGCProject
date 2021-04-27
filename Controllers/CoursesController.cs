@@ -45,14 +45,6 @@ namespace OOP_VGCProject.Controllers
             return View(course);
         }
 
-        private void PopulateDisciplineDropDownList(object selectedDiscipline = null)
-        {
-            var disciplineQuery = from d in _context.Discipline
-                                  orderby d.CourseName
-                                  select d;
-            ViewBag.DisciplineId = new SelectList(disciplineQuery.AsNoTracking(), "DisciplineId", "CourseName", selectedDiscipline);
-        }
-
         // GET: Courses/Create
         public IActionResult Create()
         {
@@ -61,7 +53,7 @@ namespace OOP_VGCProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("CourseId,CourseName,CourseDescription,StartingTime,EndingTime,GroupId,DisciplineId")] Course course)
+        public async Task<IActionResult> Create([Bind("CourseId,FacultyId,CourseName,CourseDescription,StartingTime,EndingTime,GroupId,DisciplineId")] Course course)
         {
             if (ModelState.IsValid)
             {
@@ -123,6 +115,14 @@ namespace OOP_VGCProject.Controllers
             }
             PopulateDisciplineDropDownList(courseToUpdate.DisciplineId);
             return View(courseToUpdate);
+        }
+
+        private void PopulateDisciplineDropDownList(object selectedDiscipline = null)
+        {
+            var disciplineQuery = from d in _context.Discipline
+                                  orderby d.CourseName
+                                  select d;
+            ViewBag.DisciplineId = new SelectList(disciplineQuery.AsNoTracking(), "Id", "CourseName", selectedDiscipline);
         }
 
         // GET : Courses/Delete/5

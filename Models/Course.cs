@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace OOP_VGCProject.Models
         public int CourseId { get; set; }
 
         [Required]
-        public int FacultyId { get; set; }
+        public string FacultyId { get; set; }
 
         [Required]
         [Display(Name = "Course")]
@@ -45,9 +45,8 @@ namespace OOP_VGCProject.Models
 
         [Required]
         [Display(Name = "DisciplineId")]
-        public int DisciplineId { get; set; }
+        public int? DisciplineId { get; set; }
 
-        [Required]
         [Display(Name = "Discipline")]
         public virtual Discipline Discipline { get; set; }
     }
