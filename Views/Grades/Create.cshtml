@@ -1,4 +1,10 @@
-﻿@model OOP_VGCProject.Models.Grades
+﻿@using OOP_VGCProject.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject ApplicationDbContext _context;
+
+@model OOP_VGCProject.Models.Grades
 
 @{
     ViewData["Title"] = "Create";
@@ -12,11 +18,24 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label asp-for="Student_id" class="control-label"></label>
                 <input asp-for="Student_id" class="form-control" />
                 <span asp-validation-for="Student_id" class="text-danger"></span>
+            </div>-->
+
+            <div class="form-group">
+                <label class="control-label">Student</label>
+                <select asp-for="Student_id" class="form-control" name="Student_id">
+                    <option value="">Select a student</option>
+                    @foreach (var u in UserManager.Users.ToList())
+                    {
+                        <option value="@u.Id">@u</option>
+                    }
+                </select>
+                <span asp-validation-for="Student_id" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="grade" class="control-label"></label>
                 <input asp-for="grade" class="form-control" />
@@ -32,11 +51,24 @@
                 <input asp-for="control_name" class="form-control" />
                 <span asp-validation-for="control_name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label asp-for="Discipline" class="control-label"></label>
                 <input asp-for="Discipline" class="form-control" />
                 <span asp-validation-for="Discipline" class="text-danger"></span>
+            </div>-->
+
+            <div class="form-group">
+                <label class="control-label">Discipline</label>
+                <select asp-for="Discipline" class="form-control" name="Discipline">
+                    <option value="">Select a discipline</option>
+                    @foreach (var d in _context.Discipline.ToList())
+                    {
+                        <option value=@d.CourseName>@d.CourseName</option>
+                    }
+                </select>
+                <span asp-validation-for="Discipline" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
