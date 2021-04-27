@@ -1,3 +1,7 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 @model IEnumerable<OOP_VGCProject.Models.Course>
 
 @{  
@@ -5,10 +9,14 @@
 }  
   
 <h2>Courses</h2>  
-  
-<p>
-    @Html.ActionLink("Create New", "Create")  
-</p>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+{
+    <p>
+    @Html.ActionLink("Create New", "Create", "Courses", null, new {@class = "btn btn-primary"})
+    </p>
+}
+
 
 <table class="table">
     <thead>
@@ -46,9 +54,14 @@
                     @Html.DisplayFor(modelItem => item.Discipline.CourseName)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.CourseId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CourseId">Details</a> |
+                    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                    {
+                    <a asp-action="Edit" asp-route-id="@item.CourseId">Edit</a>
+                    <a>|</a>
                     <a asp-action="Delete" asp-route-id="@item.CourseId">Delete</a>
+                    <a>|</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.CourseId">Details</a>
                 </td>
             </tr>
         }
