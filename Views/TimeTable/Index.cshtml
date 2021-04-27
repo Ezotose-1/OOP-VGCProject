@@ -4,26 +4,88 @@
     List<string> eventTitles = ViewBag.EventTitles;
     List<DateTime> eventStartingDates = ViewBag.EventStartingDates;
     List<DateTime> eventEndingDates = ViewBag.EventEndingDates;
-    List<string> eventThemesColors = ViewBag.EventThemesColors;
 
     int nbEvent = eventTitles.Count;
-    DateTime TodayDate = DateTime.Now;
-
+    DateTime todayDate = DateTime.Now;
 }
 
-<button>Previous month</button>
+<button id="previousMonthButton">Previous month</button>
 <button id="thisMonthButton">This month</button>
 <button id="nextMonthButton">Next month</button>
 
-<div id="dayTimeTable"></div>
+<div id="Today">
+    <h4>@todayDate.Month @todayDate.Year</h4>
+</div>
 
-<div id="calendar">
+<div id="dayTimeTable-grid">
 
-
-    <div id="Today">
-        <h4>@TodayDate.Day @TodayDate.Month @TodayDate.Year</h4>
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">8-9</h6>
+        <div class="dayTimeTable-courses-container" id="8-9"></div>
     </div>
 
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">9-10</h6>
+        <div class="dayTimeTable-courses-container" id="9-10"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">10-11</h6>
+        <div class="dayTimeTable-courses-container" id="10-11"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">11-12</h6>
+        <div class="dayTimeTable-courses-container" id="11-12"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">12-13</h6>
+        <div class="dayTimeTable-courses-container" id="12-13"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">13-14</h6>
+        <div class="dayTimeTable-courses-container" id="13-14"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">14-15</h6>
+        <div class="dayTimeTable-courses-container" id="14-15"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">15-16</h6>
+        <div id="15-16"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">16-17</h6>
+        <div class="dayTimeTable-courses-container" id="16-17"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">17-18</h6>
+        <div class="dayTimeTable-courses-container" id="17-18"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">18-19</h6>
+        <div class="dayTimeTable-courses-container" id="18-19"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">19-20</h6>
+        <div class="dayTimeTable-courses-container" id="19-20"></div>
+    </div>
+
+    <div class="dayTimeTable-timespan">
+        <h6 class="dayTimeTable-dispSpan">20-21</h6>
+        <div class="dayTimeTable-courses-container" id="20-21"></div>
+    </div>
+</div>
+
+<div id="calendar">
     <div id="calendar-grid">
         <div id="w1" class="day">
             Mo
@@ -47,7 +109,7 @@
             Su
         </div>
 
-        <button class="calendar-date" id="d1">1</button>
+        <button class="calendar-date" id="d1">1</button></a>
         <button class="calendar-date" id="d2">2</button>
         <button class="calendar-date" id="d3">3</button>
         <button class="calendar-date" id="d4">4</button>
@@ -85,9 +147,14 @@
 
 @section Styles{ 
     <style type="text/css">
+        body {
+            background-color: #ffe3de;
+        }
+
         .day{
             text-align:center;
         }
+
 
         #calendar-grid {
             display: grid;
@@ -103,21 +170,69 @@
                 ". . . . . . .";
         }
 
+        #dayTimeTable-grid {
+            display: block;
+            background-color: #03506f;
+        }
+
+        .dayTimeTable-timespan {
+            padding-top: 30px;
+            background-color: #a3ddcb;
+        }
+
+        .dayTimeTable-dispSpan{
+            position:relative;
+            text-align:center;
+
+        }
+
+        .dayTimeTable-courses-container{
+            position:relative;
+            text-align:center;
+        }
+
         .calendar-date{
             border-color: black;
         }
 
         .calendar-date-text {
+            position:center;
         }
+        
     </style>
 }
 
 @section Scripts {
     <script type="text/javascript">
+        
+        //#region init date variables
+        let todayDate = new Date();
 
-        let thisMonthButton = document.getElementById("thisMonthButton")
-        let nextMonthButton = document.getElementById("nextMonthButton")
+        let todayDay = todayDate.getDate();
+        let todayMonth = todayDate.getMonth() + 1;
+        let todayYear = todayDate.getFullYear();
 
+        let addDay = 0;
+        let addMonth = 0;
+        let addYear = 0;
+
+        let dispDay = todayDay;
+        let dispMonth = todayMonth;
+        let dispYear = todayYear;
+
+        let dailyCourses = [document.getElementById("8-9"), document.getElementById("9-10"), document.getElementById("10-11"), document.getElementById("11-12"), document.getElementById("12-13"), document.getElementById("13-14"), document.getElementById("14-15"), document.getElementById("15-16"), document.getElementById("16-17"), document.getElementById("17-18"), document.getElementById("18-19"), document.getElementById("19-20"), document.getElementById("20-21")];
+
+        ThisMonth();
+
+        //#endregion
+
+        //#region get date change buttons
+        let previousMonthButton = document.getElementById("previousMonthButton");
+        let thisMonthButton = document.getElementById("thisMonthButton");
+        let nextMonthButton = document.getElementById("nextMonthButton");
+        //#endregion
+
+        //#region get buttons from calendar
         let d1 = document.getElementById("d1");
         let d2 = document.getElementById("d2");
         let d3 = document.getElementById("d3");
@@ -149,140 +264,178 @@
         let d29 = document.getElementById("d29");
         let d30 = document.getElementById("d30");
         let d31 = document.getElementById("d31");
+        //#endregion
+
+        //#region buttonListeners
+        previousMonthButton.addEventListener('click', () => {
+            PreviousMonth()
+        })
 
         thisMonthButton.addEventListener('click', () => {
             ThisMonth()
         })
 
+        nextMonthButton.addEventListener('click', () => {
+            NextMonth()
+        })
+
         /*
         nextMonthButton.addEventListener('click', () => {
-           
+
         })*/
 
         d1.addEventListener('click', () => {
-            DisplayDayTimetable("1")
+            DisplayDayTimetable("1", dispMonth, dispYear)
         })
 
         d2.addEventListener('click', () => {
-            DisplayDayTimetable("2")
+            DisplayDayTimetable("2",dispMonth,dispYear)
         })
 
         d3.addEventListener('click', () => {
-            DisplayDayTimetable("3")
+            DisplayDayTimetable("3", dispMonth, dispYear)
         })
 
         d4.addEventListener('click', () => {
-            DisplayDayTimetable("4")
+            DisplayDayTimetable("4", dispMonth, dispYear)
         })
 
         d5.addEventListener('click', () => {
-            DisplayDayTimetable("5")
+            DisplayDayTimetable("5", dispMonth, dispYear)
         })
 
         d6.addEventListener('click', () => {
-            DisplayDayTimetable("6")
+            DisplayDayTimetable("6", dispMonth, dispYear)
         })
 
         d7.addEventListener('click', () => {
-            DisplayDayTimetable("7")
+            DisplayDayTimetable("7", dispMonth, dispYear)
         })
 
         d8.addEventListener('click', () => {
-            DisplayDayTimetable("8")
+            DisplayDayTimetable("8", dispMonth, dispYear)
         })
 
         d9.addEventListener('click', () => {
-            DisplayDayTimetable("9")
+            DisplayDayTimetable("9", dispMonth, dispYear)
         })
 
         d10.addEventListener('click', () => {
-            DisplayDayTimetable("10")
+            DisplayDayTimetable("10", dispMonth, dispYear)
         })
 
         d11.addEventListener('click', () => {
-            DisplayDayTimetable("11")
+            DisplayDayTimetable("11", dispMonth, dispYear)
         })
 
         d12.addEventListener('click', () => {
-            DisplayDayTimetable("12")
+            DisplayDayTimetable("12", dispMonth, dispYear)
         })
 
         d13.addEventListener('click', () => {
-            DisplayDayTimetable("13")
+            DisplayDayTimetable("13", dispMonth, dispYear)
         })
 
         d14.addEventListener('click', () => {
-            DisplayDayTimetable("14")
+            DisplayDayTimetable("14", dispMonth, dispYear)
         })
 
         d15.addEventListener('click', () => {
-            DisplayDayTimetable("15")
+            DisplayDayTimetable("15", dispMonth, dispYear)
         })
 
         d16.addEventListener('click', () => {
-            DisplayDayTimetable("16")
+            DisplayDayTimetable("16", dispMonth, dispYear)
         })
 
         d17.addEventListener('click', () => {
-            DisplayDayTimetable("17")
+            DisplayDayTimetable("17", dispMonth, dispYear)
         })
 
         d18.addEventListener('click', () => {
-            DisplayDayTimetable("18")
+            DisplayDayTimetable("18", dispMonth, dispYear)
         })
 
         d19.addEventListener('click', () => {
-            DisplayDayTimetable("19")
+            DisplayDayTimetable("19", dispMonth, dispYear)
         })
 
         d20.addEventListener('click', () => {
-            DisplayDayTimetable("20")
+            DisplayDayTimetable("20", dispMonth, dispYear)
         })
 
         d21.addEventListener('click', () => {
-            DisplayDayTimetable("21")
+            DisplayDayTimetable("21", dispMonth, dispYear)
         })
 
         d22.addEventListener('click', () => {
-            DisplayDayTimetable("22")
+            DisplayDayTimetable("22", dispMonth, dispYear)
         })
 
         d23.addEventListener('click', () => {
-            DisplayDayTimetable("23")
+            DisplayDayTimetable("23", dispMonth, dispYear)
         })
 
         d24.addEventListener('click', () => {
-            DisplayDayTimetable("24")
+            DisplayDayTimetable("24", dispMonth, dispYear)
         })
 
         d25.addEventListener('click', () => {
-            DisplayDayTimetable("25")
+            DisplayDayTimetable("25", dispMonth, dispYear)
         })
 
         d26.addEventListener('click', () => {
-            DisplayDayTimetable("26")
+            DisplayDayTimetable("26", dispMonth, dispYear)
         })
 
         d27.addEventListener('click', () => {
-            DisplayDayTimetable("27")
+            DisplayDayTimetable("27", dispMonth, dispYear)
         })
 
         d28.addEventListener('click', () => {
-            DisplayDayTimetable("28")
+            DisplayDayTimetable("28", dispMonth, dispYear)
         })
 
         d29.addEventListener('click', () => {
-            DisplayDayTimetable("29")
+            DisplayDayTimetable("29", dispMonth, dispYear)
         })
 
         d30.addEventListener('click', () => {
-            DisplayDayTimetable("30")
+            DisplayDayTimetable("30", dispMonth, dispYear)
         })
 
         d31.addEventListener('click', () => {
-            DisplayDayTimetable("31")
+            DisplayDayTimetable("31", dispMonth, dispYear)
         })
+        //#endregion
 
+        //#region js functions
+
+        //#region component init
+
+        //#region dayTimeTable init
+        function activeDayTimeTable() {
+            dayTimeTable = document.getElementById("dayTimeTable-grid");
+            dayTimeTable.style.display = "block";
+            for (let i = 0; i < dailyCourses.length; i++) {
+                dailyCourses[i].innerHTML = "";
+            }
+        }
+
+        function inactiveDayTimeTable() {
+            dayTimeTable = document.getElementById("dayTimeTable-grid");
+            dayTimeTable.style.display = "none";
+        }
+        //#endregion
+
+        //#region refresh Date
+        function refreshDate() {
+            let today = document.getElementById('Today');
+            today.innerHTML = "<h4>" + dispMonth + " " + dispYear + "</h4>";
+        }
+        //#endregion
+
+        //#region calendar init
         function activeCalendar() {
             let calendar = document.getElementById('calendar');
             calendar.style.display = 'block';
@@ -294,14 +447,18 @@
         }
 
         function initialiseCalendar() {
-   
+
             activeCalendar();
+
             let dates = document.getElementsByClassName("calendar-date");
             for (let i = 0; i < dates.length; i++) {
                 dates[i].innerHTML = i+1;
             }
         }
+        //#endregion
+        //#endregion
 
+        //#region date operations
 
         function convertDate(date)
         {
@@ -315,71 +472,134 @@
 
             let count = 0;
 
+            console.log(le);
             while (i < le) {
                 if (date[i] == '-' || date[i] == 'T') {
                     count++;
-                    i++;
                 }
                 else {
-                    if (date[i] == '.') {
-                        return [year, month, day, time];
-                    }
-
-                    switch (count) {
-                        case 0:
-                            year += date[i];
-                            break;
-                        case 1:
-                            month += date[i];
-                            break;
-                        case 2:
-                            day += date[i];
-                            break;
-                        case 3:
-                            time += date[i];
-                            break;
-                    }
-                    i++;
+                    if (count == 0)
+                        year += date[i];
+                    if (count == 1)
+                        month += date[i];
+                    if (count == 2)
+                        day += date[i];
+                    if (count == 3)
+                        time += date[i];
                 }
+                i++;  
             }
+            console.log([year, month, day, time]);
+            return [year, month, day, time];
+
         }
 
-        function DisplayDayTimetable(day) {
-            let colors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventThemesColors));
-            let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
-            let eventTitles =@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
+        function addMonthsUTC(date, count) {
+            if (date && count) {
+                let m, d = (date = new Date(+date)).getUTCDate()
 
-            inactiveCalendar();
-
-            let dayTimeTable = document.getElementById('dayTimeTable');
-            dayTimeTable.innerHTML = "";
-
-            for (let i = 0; i < @nbEvent; i++) {
-
-                let dateInformation = convertDate(eventSDates[i])
-
-                let Syear = dateInformation[0];
-                let Smonth = dateInformation[1];
-                let Sday = dateInformation[2];
-                let Stime = dateInformation[3];
-
-                if (Sday == day) {
-                    dayTimeTable.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#" + colors[i] + "\">" + eventTitles[i] + " " + Stime + "</p>";
-                }
+                date.setUTCMonth(date.getUTCMonth() + count, 1)
+                m = date.getUTCMonth()
+                date.setUTCDate(d)
+                if (date.getUTCMonth() !== m) date.setUTCDate(0)
             }
+            return date;
         }
+        //#endregion
 
+        //#region function display day choose timetable
+        function DisplayDayTimetable(day, month, year) {
+           
+          
+                let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
+                let eventTitles =@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
+
+                
+                inactiveCalendar();
+
+                activeDayTimeTable();
+                refreshDate();
+
+                let alreadyTouch = [];
+                for (let i = 0; i < dailyCourses.length; i++) {
+                    alreadyTouch.push(false);
+                }
+
+                for(let i = 0; i < @nbEvent; i++) {
+
+                    let dateInformation = convertDate(eventSDates[i])
+
+                    let Syear = dateInformation[0];
+                    let Smonth = dateInformation[1];
+                    let Sday = dateInformation[2];
+                    let Stime = dateInformation[3];
+                    let Shour = parseInt(Stime[0]+Stime[1]);
+
+                    if (Sday == day && Smonth == month && Syear == year) {
+                        
+                        if (Shour >= 8 && Shour <= 20) {
+                            let hourComp = dailyCourses[Shour - 8];
+                            alreadyTouch[Shour - 8] = true;
+                            hourComp.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#FF0000\">" + eventTitles[i] + " " + Stime + "</p>";
+                        }
+                    }
+                    for (let i = 0; i < alreadyTouch.length; i++) {
+                        if (!alreadyTouch[i])
+                            dailyCourses[i].innerHTML = "";
+                    }
+            }
+
+        }
+        //#endregion
+
+        //#region changing date button functions
         function ThisMonth() {
-            let color = "";
+            addMonth = 0;
+            dispDay = todayDay;
+            dispMonth = todayMonth;
+            dispYear = todayYear;
+
             initialiseCalendar();
-            let daytimetable = document.getElementById('dayTimeTable');
-            daytimetable.innerHTML = "";
+            refreshDate();
+            inactiveDayTimeTable();
+
+            let color = "#FF0000";
 
             let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
             let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
             let eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
-            let eventColors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventThemesColors));
 
+            console.log(eventSDates);
+            for (let i = 0; i < @nbEvent; i++) {
+                let r = convertDate(eventSDates[i]);
+                let Syear = r[0];
+                let Smonth = r[1];
+                let Sday = r[2];
+                let Stime = r[3];
+                
+                if (Smonth == todayMonth) {
+                    let addEvent = document.getElementById("d" + Sday);
+                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:"+color+"\">"+eventTitles[i] + " " + Stime +"</p>";
+                }
+            }
+        }
+
+        function NextMonth() {
+            addMonth++;
+            let changingDate = addMonthsUTC(todayDate, addMonth);
+            dispDay = changingDate.getDate();
+            dispMonth = changingDate.getMonth()+1;
+            dispYear = changingDate.getFullYear();
+
+            let color = "";
+            initialiseCalendar();
+            refreshDate();
+            inactiveDayTimeTable();
+
+            let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
+                let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
+                let eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
+              
             for (let i = 0; i < @nbEvent; i++) {
                 let r = convertDate(eventSDates[i]);
 
@@ -388,15 +608,48 @@
                 let Sday = r[2];
                 let Stime = r[3];
 
-                if (Smonth == @TodayDate.Month) {
+                if (Smonth == dispMonth) {
                     let addEvent = document.getElementById("d" + Sday);
-
-                    color = eventColors[i];
-                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#" + color+"\">"+eventTitles[i] + " " + Stime +"</p>";
+                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:" + color + "\">" + eventTitles[i] + " " + Stime + "</p>";
                 }
             }
         }
 
+        function PreviousMonth() {
+            addMonth--;
+            let changingDate = addMonthsUTC(todayDate, addMonth);
+            dispDay = changingDate.getDate();
+            dispMonth = changingDate.getMonth() + 1;
+            dispYear = changingDate.getFullYear();
+
+            let color = "";
+            initialiseCalendar();
+            refreshDate();
+            inactiveDayTimeTable();
+
+            let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
+            let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
+            let eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
+           
+            for (let i = 0; i < @nbEvent; i++) {
+                let r = convertDate(eventSDates[i]);
+
+                let Syear = r[0];
+                let Smonth = r[1];
+                let Sday = r[2];
+                let Stime = r[3];
+
+                if (Smonth == dispMonth) {
+                    let addEvent = document.getElementById("d" + Sday)
+
+                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:" + color + "\">" + eventTitles[i] + " " + Stime + "</p>";
+                }
+            }
+
+        }
+        //#endregion
+
+        //#endregion
     </script>
 
 }

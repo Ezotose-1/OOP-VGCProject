@@ -1,0 +1,49 @@
+﻿@using OOP_VGCProject.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject ApplicationDbContext _context;
+
+@model IEnumerable<OOP_VGCProject.Models.UserDiscipline>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Student Disciplines</h1>
+
+<br />
+<br />
+<p>
+    <a asp-action="Create" class="btn btn-primary">Match new student to a discipline</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Student
+            </th>
+            <th>
+                Discipline
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @UserManager.FindByIdAsync(item.UserId).Result
+                </td>
+                <td>
+                    @_context.Discipline.Find(item.DisciplineId).CourseName
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

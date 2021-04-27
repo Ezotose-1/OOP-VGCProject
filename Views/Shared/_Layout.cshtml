@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,7 +24,7 @@ body {
   width: 160px;
   position: fixed;
   z-index: 1;
-  top: 58px;
+  top: 0;
   left: 0;
   background-color: #fff;
   overflow-x: hidden;
@@ -73,15 +77,26 @@ body {
         </nav>
     </header>
 
-
-    <!--    SIDEBAR     -->
+    @if (SignInManager.IsSignedIn(User))
+    {
+            <!--    SIDEBAR     -->
     <div class="sidenav border-right border-top box-shadow">
-        <a asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
-        <a href="#">Schedule</a>
+        <a style="margin-top:-7px ;text-align:center; padding:0"><h4>Menu</h4></a>
+        <hr />
+        <a style="margin-top:10px" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
+        <a asp-controller="Fees" asp-action="Index">Payment</a>
+        <a asp-controller="Exams" asp-action="Index">Exams</a>
+        <a asp-controller="Timetable" asp-action="Index">Schedule</a>
         <a asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
-        <a href="#">Grade Book</a>
-        <a href="#">Exams</a>
+        <a asp-controller="Grades" asp-action="Index">Grades Book</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Disciplines" asp-action="Index">Create Disciplines</a>
+            <a asp-controller="UserDisciplines" asp-action="Index">Student Disciplines</a>
+        }
+
     </div>
+    }
 
     <div class="container">
         <main role="main" class="pb-3">

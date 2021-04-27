@@ -1,0 +1,74 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@model IEnumerable<OOP_VGCProject.DTO.UserFeeDTO>
+
+@{
+    ViewData["Title"] = "Fee Management";
+}
+
+<h1>Fee management</h1>
+<br />
+@if (User.IsInRole("Admin"))
+{
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Fee Name
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fee.Price)
+            </th>
+            <th style="text-align: center;">
+                Actions
+            </th>
+            <th style="text-align: center;">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fee.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fee.Price)
+                </td>
+                <td style="text-align: center;">
+                    @if (item.IsPaid)
+                    {
+                        <a>Already Paid</a> <br />
+                    }
+                    else
+                    {
+                        <a asp-action="Pay" asp-route-id="@item.Fee.Id" class="btn btn-primary">Pay</a> <br />
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Fee.Id">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Fee.Id">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Fee.Id">Delete</a>
+                    }
+                </td>
+                <td style="text-align: center;">
+                    @if (item.IsPaid)
+                    {
+                        <a>Payed</a>
+                    }
+                    else
+                    {
+                        <a>Not Payed</a>
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
