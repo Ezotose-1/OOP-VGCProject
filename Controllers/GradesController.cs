@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,7 +30,8 @@ namespace OOP_VGCProject.Controllers
             var GradeList = await _context.Grades.Where(m => m.Student_id == loggedUserId).OrderBy(o => o.Discipline).ToListAsync();
             return View(GradeList);
         }
-        
+
+        [Authorize(Roles = "Faculty")]
         // GET: Grades/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -48,6 +50,7 @@ namespace OOP_VGCProject.Controllers
             return View(grades);
         }
 
+        [Authorize(Roles = "Faculty")]
         // GET: Grades/Create
         public IActionResult Create()
         {
@@ -70,6 +73,7 @@ namespace OOP_VGCProject.Controllers
             return View(grades);
         }
 
+        [Authorize(Roles = "Faculty")]
         // GET: Grades/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -91,6 +95,7 @@ namespace OOP_VGCProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Faculty")]
         public async Task<IActionResult> Edit(int id, [Bind("Grade_id,Student_id,grade,coefficient,control_name,Disipline")] Grades grades)
         {
             if (id != grades.Grade_id)
@@ -120,7 +125,7 @@ namespace OOP_VGCProject.Controllers
             }
             return View(grades);
         }
-
+        [Authorize(Roles = "Faculty")]
         // GET: Grades/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -142,6 +147,7 @@ namespace OOP_VGCProject.Controllers
         // POST: Grades/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Faculty")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var grades = await _context.Grades.FindAsync(id);

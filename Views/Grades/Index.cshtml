@@ -32,7 +32,7 @@
                 @Html.DisplayNameFor(model => model.Discipline)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.control_name)
+                control
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.coefficient)
@@ -54,7 +54,8 @@
             {
                 if (Current_Discipline != item.Discipline && Current_Discipline != "")
                 {
-                    Medium = Grade_Discipline / coef_Discipline;
+                    if (coef_Discipline != 0) { Medium = Grade_Discipline / coef_Discipline; }
+                    else { Medium = 0; }
                     <tr class="Medium_Discipline">
                         <td>
                             <!-- disipline -->
@@ -112,7 +113,8 @@
             }
             if (coef_Discipline != 0)
             {
-                Medium = Grade_Discipline / coef_Discipline;
+                if (coef_Discipline != 0) { Medium = Grade_Discipline / coef_Discipline; }
+                else { Medium = 0; }
                 <tr class="Medium_Discipline">
                     <td>
                         <!-- disipline -->
@@ -132,7 +134,8 @@
                 medium_Grade += Medium;
                 nb_Discipline += 1;
             }
-            Medium = medium_Grade / nb_Discipline;
+            if (nb_Discipline != 0) { Medium = medium_Grade / nb_Discipline; }
+            else { Medium = 0; }
             <tr class="Medium">
                 <td>
                     Medium
