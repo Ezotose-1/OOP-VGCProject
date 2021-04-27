@@ -37,7 +37,7 @@ Team members :
 23731  loicSchussler         Loic Schussler  
 23740  Ezotose-1             Pierre Blaess  
 23728  saguira               Julien Calisto  
-23724  AbyadhX               Hafid Housni  
+23724  Afoulky               Hafid Housni  
   
    
 ### License
