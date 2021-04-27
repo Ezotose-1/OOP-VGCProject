@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
@@ -10,6 +10,7 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 
@@ -86,13 +87,14 @@ body {
         <a asp-controller="Fees" asp-action="Index">Payment</a>
         <a asp-controller="Exams" asp-action="Index">Exams</a>
         <a asp-controller="Timetable" asp-action="Index">Schedule</a>
-        <a href="#">Courses</a>
+        <a asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
         <a asp-controller="Grades" asp-action="Index">Grades Book</a>
         @if (User.IsInRole("Admin"))
         {
             <a asp-controller="Disciplines" asp-action="Index">Create Disciplines</a>
             <a asp-controller="UserDisciplines" asp-action="Index">Student Disciplines</a>
         }
+
     </div>
     }
 
@@ -110,6 +112,10 @@ body {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    
     @await RenderSectionAsync("Styles",required: false)
     @await RenderSectionAsync("Scripts", required: false)
 </body>

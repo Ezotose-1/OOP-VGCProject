@@ -1,0 +1,69 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@model IEnumerable<OOP_VGCProject.Models.Course>
+
+@{  
+    ViewBag.Title = "Courses";
+}  
+  
+<h2>Courses</h2>  
+
+@if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+{
+    <p>
+    @Html.ActionLink("Create New", "Create", "Courses", null, new {@class = "btn btn-primary"})
+    </p>
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartingTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discipline)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartingTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discipline.CourseName)
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                    {
+                    <a asp-action="Edit" asp-route-id="@item.CourseId">Edit</a>
+                    <a>|</a>
+                    <a asp-action="Delete" asp-route-id="@item.CourseId">Delete</a>
+                    <a>|</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.CourseId">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
