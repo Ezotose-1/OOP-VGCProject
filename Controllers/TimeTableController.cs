@@ -37,14 +37,17 @@ namespace OOP_VGCProject.Controllers
             List<DateTime> EndingDates = new List<DateTime>();
             List<string> ThemesColors = new List<string>();
 
-            var groupsListsQ = _context.GroupStudentLists.Where(x => x.StudentId == _userManager.GetUserAsync(HttpContext.User).Id).ToList();
+            string userId =  _userManager.GetUserAsync(HttpContext.User).Result.Id;
+            var groupsListsQ =  await _context.GroupStudentList.Where(x => x.StudentId == userId).ToListAsync();
+
+            
             List<string> groupIdWhereUserIs = new List<string>();
             foreach(var group in groupsListsQ)
             {
                 groupIdWhereUserIs.Add(group.GroupId);
             }
 
-            var coursesQ = _context.Courses.Where(x => groupIdWhereUserIs.Contains(x.GroupId));
+            var coursesQ = await _context.Courses.Where(x => groupIdWhereUserIs.Contains(x.GroupId)).ToListAsync();
             
 
             foreach(var cours in coursesQ)

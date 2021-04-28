@@ -10,7 +10,7 @@ namespace OOP_VGCProject.Models
     {
         [Key]
         public int AddId { get; set; }
-        public int StudentId { get; set; }
+        public string StudentId { get; set; }
         public string GroupId { get; set; }
 
     }
