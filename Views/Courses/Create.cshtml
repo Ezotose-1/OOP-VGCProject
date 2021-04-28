@@ -1,3 +1,7 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 @model OOP_VGCProject.Models.Course
 
 @{
@@ -18,11 +22,24 @@
                 <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
 
+            @if (User.IsInRole("Admin"))
+            {
             <div class="form-group">
-                <label asp-for="FacultyId" class="control-label"></label>
-                <input asp-for="FacultyId" class="form-control" />
-                <span asp-validation-for="FacultyId" class="text-danger"></span>
+                <label asp-for="Faculty" class="control-label"></label>
+                <select asp-for="FacultyId" class="form-control" asp-items="ViewBag.FacultyId">
+                    <option value="">-- Select Faculty --</option>
+                </select>
+                <span asp-validation-for="FacultyId" class="text-danger" />
             </div>
+            }
+            else
+            {
+            <div class="form-group">
+                <label asp-for="Faculty" class="control-label"></label>
+                <input asp-for="FacultyId" type="hidden" value="@(UserManager.GetUserId(User))" class="form-control"/>
+                <div>@User.Identity.Name</div>
+            </div>
+            }
 
             <div class="form-group">
                 <label asp-for="CourseName" class="control-label"></label>

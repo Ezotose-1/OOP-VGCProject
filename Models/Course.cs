@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace OOP_VGCProject.Models
@@ -49,5 +50,8 @@ namespace OOP_VGCProject.Models
 
         [Display(Name = "Discipline")]
         public virtual Discipline Discipline { get; set; }
+
+        [Display(Name = "Faculty")]
+        public virtual IdentityUser Faculty { get; set; }
     }
 }
