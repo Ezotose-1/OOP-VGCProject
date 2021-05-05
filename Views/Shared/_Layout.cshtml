@@ -1,4 +1,4 @@
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
@@ -80,22 +80,29 @@ body {
     @if (SignInManager.IsSignedIn(User))
     {
             <!--    SIDEBAR     -->
-    <div class="sidenav border-right border-top box-shadow">
-        <a style="margin-top:-7px ;text-align:center; padding:0"><h4>Menu</h4></a>
-        <hr />
-        <a style="margin-top:10px" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
-        <a asp-controller="Fees" asp-action="Index">Payment</a>
-        <a asp-controller="Exams" asp-action="Index">Exams</a>
-        <a asp-controller="Timetable" asp-action="Index">Schedule</a>
-        <a asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
+<div class="sidenav border-right border-top box-shadow">
+    <a style="margin-top:-7px ;text-align:center; padding:0"><h4>Menu</h4></a>
+    <hr />
+    <a style="margin-top:10px" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
+    <a asp-controller="Fees" asp-action="Index">Payment</a>
+    <a asp-controller="Exams" asp-action="Index">Exams</a>
+    <a asp-controller="Timetable" asp-action="Index">Schedule</a>
+    <a asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
+    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+    {
+        <a asp-controller="Grades" asp-action="AssignGrade">Assign Grade</a>
+    }
+    else
+    {
         <a asp-controller="Grades" asp-action="Index">Grades Book</a>
-        @if (User.IsInRole("Admin"))
-        {
-            <a asp-controller="Disciplines" asp-action="Index">Create Disciplines</a>
-            <a asp-controller="UserDisciplines" asp-action="Index">Student Disciplines</a>
-        }
+    }
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Disciplines" asp-action="Index">Create Disciplines</a>
+        <a asp-controller="UserDisciplines" asp-action="Index">Student Disciplines</a>
+    }
 
-    </div>
+</div>
     }
 
     <div class="container">

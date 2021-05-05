@@ -24,7 +24,7 @@ namespace OOP_VGCProject.Controllers
             this.userManager = userManager;
         }
 
-            // HttpGet to get the CreateRole view
+        // HttpGet to get the CreateRole view
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public IActionResult CreateRole()

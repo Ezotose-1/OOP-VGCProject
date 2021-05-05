@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<OOP_VGCProject.Models.Grades>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index_of";
 }
 
 <style>
@@ -11,6 +11,7 @@
 
     .Grade {
     }
+
     .Medium {
         background: rgb(216, 191, 216);
     }
@@ -18,11 +19,13 @@
     .Medium_Discipline td:not(td:first-child) {
         background: rgb(135, 206, 250);
     }
-
 </style>
+
 <h1>Grades Book</h1>
 
-
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -104,6 +107,11 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.grade)
+        </td>
+
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Grade_id">Edit</a>
+            <a asp-action="Delete" asp-route-id="@item.Grade_id">Delete</a>
         </td>
     </tr>
                 Grade_Discipline += item.grade * item.coefficient;
