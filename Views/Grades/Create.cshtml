@@ -46,11 +46,24 @@
                 <input asp-for="coefficient" class="form-control" />
                 <span asp-validation-for="coefficient" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label asp-for="control_name" class="control-label"></label>
                 <input asp-for="control_name" class="form-control" />
                 <span asp-validation-for="control_name" class="text-danger"></span>
+            </div>-->
+
+            <div class="form-group">
+                <label class="control-label">Controle Name</label>
+                <select asp-for="control_name" class="form-control" name="control_name">
+                    <option value="">Select an exam</option>
+                    @foreach (var e in _context.Exams.ToList())
+                    {
+                        <option value=@e.ExamName>@e.ExamName</option>
+                    }
+                </select>
+                <span asp-validation-for="control_name" class="text-danger"></span>
             </div>
+
             <!--<div class="form-group">
                 <label asp-for="Discipline" class="control-label"></label>
                 <input asp-for="Discipline" class="form-control" />

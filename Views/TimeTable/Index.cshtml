@@ -1,9 +1,10 @@
-﻿@{
+@{
     ViewBag.Title = "Index";
 
     List<string> eventTitles = ViewBag.EventTitles;
     List<DateTime> eventStartingDates = ViewBag.EventStartingDates;
     List<DateTime> eventEndingDates = ViewBag.EventEndingDates;
+    List<string> professorNames = ViewBag.ProfessorNames;
 
     int nbEvent = eventTitles.Count;
     DateTime todayDate = DateTime.Now;
@@ -14,75 +15,10 @@
 <button id="nextMonthButton">Next month</button>
 
 <div id="Today">
-    <h4>@todayDate.Month @todayDate.Year</h4>
+    <h4 class="hour">@todayDate.Month @todayDate.Year</h4>
 </div>
 
 <div id="dayTimeTable-grid">
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">8-9</h6>
-        <div class="dayTimeTable-courses-container" id="8-9"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">9-10</h6>
-        <div class="dayTimeTable-courses-container" id="9-10"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">10-11</h6>
-        <div class="dayTimeTable-courses-container" id="10-11"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">11-12</h6>
-        <div class="dayTimeTable-courses-container" id="11-12"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">12-13</h6>
-        <div class="dayTimeTable-courses-container" id="12-13"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">13-14</h6>
-        <div class="dayTimeTable-courses-container" id="13-14"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">14-15</h6>
-        <div class="dayTimeTable-courses-container" id="14-15"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">15-16</h6>
-        <div id="15-16"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">16-17</h6>
-        <div class="dayTimeTable-courses-container" id="16-17"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">17-18</h6>
-        <div class="dayTimeTable-courses-container" id="17-18"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">18-19</h6>
-        <div class="dayTimeTable-courses-container" id="18-19"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">19-20</h6>
-        <div class="dayTimeTable-courses-container" id="19-20"></div>
-    </div>
-
-    <div class="dayTimeTable-timespan">
-        <h6 class="dayTimeTable-dispSpan">20-21</h6>
-        <div class="dayTimeTable-courses-container" id="20-21"></div>
-    </div>
 </div>
 
 <div id="calendar">
@@ -148,7 +84,7 @@
 @section Styles{ 
     <style type="text/css">
         body {
-            background-color: #ffe3de;
+            background-color: darkorange;
         }
 
         .day{
@@ -172,12 +108,12 @@
 
         #dayTimeTable-grid {
             display: block;
-            background-color: #03506f;
+            background-color: darkred;
         }
 
         .dayTimeTable-timespan {
             padding-top: 30px;
-            background-color: #a3ddcb;
+            background-color: white;
         }
 
         .dayTimeTable-dispSpan{
@@ -189,6 +125,10 @@
         .dayTimeTable-courses-container{
             position:relative;
             text-align:center;
+        }
+
+        .hour{
+            color:white;
         }
 
         .calendar-date{
@@ -204,7 +144,13 @@
 
 @section Scripts {
     <script type="text/javascript">
-        
+
+        const eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
+        const eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
+        const eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
+        const professorNames = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(professorNames));
+        const color = "#FF0000";
+
         //#region init date variables
         let todayDate = new Date();
 
@@ -219,8 +165,6 @@
         let dispDay = todayDay;
         let dispMonth = todayMonth;
         let dispYear = todayYear;
-
-        let dailyCourses = [document.getElementById("8-9"), document.getElementById("9-10"), document.getElementById("10-11"), document.getElementById("11-12"), document.getElementById("12-13"), document.getElementById("13-14"), document.getElementById("14-15"), document.getElementById("15-16"), document.getElementById("16-17"), document.getElementById("17-18"), document.getElementById("18-19"), document.getElementById("19-20"), document.getElementById("20-21")];
 
         ThisMonth();
 
@@ -414,13 +358,38 @@
         //#region component init
 
         //#region dayTimeTable init
-        function activeDayTimeTable() {
+
+        function activeDayTimeTable(courseDates, courseInfos) {
             dayTimeTable = document.getElementById("dayTimeTable-grid");
+            dayTimeTable.innerHTML = "";
             dayTimeTable.style.display = "block";
-            for (let i = 0; i < dailyCourses.length; i++) {
-                dailyCourses[i].innerHTML = "";
+
+            let nbCourses = courseDates.length;
+            if (nbCourses == 0) {
+                dayTimeTable.innerHTML = "<div class=\"dayTimeTable-TimeSpan\">Happy holiday you have no courses schedule this day !</div>";
+                return;
+            }
+
+            let startList = [];
+            let endList = [];
+
+            for (let i = 0; i < courseDates.length; i++) {
+                let start = [courseDates[i][0], courseDates[i][1]];
+                let end = [courseDates[i][2],courseDates[i][3]];
+
+                startList.push(start);
+                endList.push(end);
+            }
+
+            startList.sort((a, b) => a[0] - b[0]);
+            endList.sort((a, b) => a[0] - b[0]);
+
+            for (let i = 0; i < nbCourses; i++) {
+                let htmlCode = "<div class=\"dayTimeTable-TimeSpan\"><p class=\"hour\">" + startList[i][1] + " - " + endList[i][1] + "</p>" + courseInfos[i] + "</div";
+                dayTimeTable.innerHTML += htmlCode;
             }
         }
+
 
         function inactiveDayTimeTable() {
             dayTimeTable = document.getElementById("dayTimeTable-grid");
@@ -429,9 +398,12 @@
         //#endregion
 
         //#region refresh Date
-        function refreshDate() {
+        function refreshDate(isDaily) {
             let today = document.getElementById('Today');
-            today.innerHTML = "<h4>" + dispMonth + " " + dispYear + "</h4>";
+            if (isDaily)
+                today.innerHTML = "<h4 class=\"hour\">" +dispDay+" "+dispMonth + " " + dispYear + "</h4>";
+            else
+                today.innerHTML = "<h4 class=\"hour\">" + dispMonth + " " + dispYear + "</h4>";
         }
         //#endregion
 
@@ -472,7 +444,6 @@
 
             let count = 0;
 
-            console.log(le);
             while (i < le) {
                 if (date[i] == '-' || date[i] == 'T') {
                     count++;
@@ -487,9 +458,9 @@
                     if (count == 3)
                         time += date[i];
                 }
-                i++;  
+                i++;
             }
-            console.log([year, month, day, time]);
+
             return [year, month, day, time];
 
         }
@@ -509,45 +480,52 @@
 
         //#region function display day choose timetable
         function DisplayDayTimetable(day, month, year) {
-           
-          
-                let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
-                let eventTitles =@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
 
-                
+                let courseDates = [];
+                let courseInfos = [];
+                dispDay = day;
+
                 inactiveCalendar();
 
-                activeDayTimeTable();
-                refreshDate();
 
-                let alreadyTouch = [];
-                for (let i = 0; i < dailyCourses.length; i++) {
-                    alreadyTouch.push(false);
-                }
+                refreshDate(true);
 
                 for(let i = 0; i < @nbEvent; i++) {
 
-                    let dateInformation = convertDate(eventSDates[i])
+                    let dateSInformation = convertDate(eventSDates[i]);
+                    let dateEInformation = convertDate(eventEDates[i]);
 
-                    let Syear = dateInformation[0];
-                    let Smonth = dateInformation[1];
-                    let Sday = dateInformation[2];
-                    let Stime = dateInformation[3];
-                    let Shour = parseInt(Stime[0]+Stime[1]);
+                    let Syear = dateSInformation[0];
+                    let Smonth = dateSInformation[1];
+                    let Sday = dateSInformation[2];
+                    let Stime = dateSInformation[3];
+                    let Shour = parseInt(Stime[0] + Stime[1]);
+
+                    let Eyear = dateEInformation[0];
+                    let Emonth = dateEInformation[1];
+                    let Eday = dateEInformation[2];
+                    let Etime = dateEInformation[3];
+                    let Ehour = parseInt(Etime[0] + Etime[1]);
 
                     if (Sday == day && Smonth == month && Syear == year) {
-                        
+
                         if (Shour >= 8 && Shour <= 20) {
-                            let hourComp = dailyCourses[Shour - 8];
-                            alreadyTouch[Shour - 8] = true;
-                            hourComp.innerHTML += "<p class=\"calendar-date-text\" style=\"color:#FF0000\">" + eventTitles[i] + " " + Stime + "</p>";
+
+                            let couple = [Shour,Stime,Ehour,Etime];
+                            courseDates.push(couple);
+
+                            let htmlCode = "<p class=\"calendar-date-text\" style=\"color:#FF0000\">" + eventTitles[i] + "</br>" + professorNames[i] + "</p>";
+                            courseInfos.push(htmlCode);
                         }
                     }
-                    for (let i = 0; i < alreadyTouch.length; i++) {
-                        if (!alreadyTouch[i])
-                            dailyCourses[i].innerHTML = "";
-                    }
-            }
+
+                }
+
+            console.log(courseDates);
+            console.log(courseInfos);
+
+            activeDayTimeTable(courseDates, courseInfos);
+
 
         }
         //#endregion
@@ -560,26 +538,28 @@
             dispYear = todayYear;
 
             initialiseCalendar();
-            refreshDate();
+            refreshDate(false);
             inactiveDayTimeTable();
 
-            let color = "#FF0000";
-
-            let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
-            let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
-            let eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
-
-            console.log(eventSDates);
             for (let i = 0; i < @nbEvent; i++) {
-                let r = convertDate(eventSDates[i]);
-                let Syear = r[0];
-                let Smonth = r[1];
-                let Sday = r[2];
-                let Stime = r[3];
-                
+                let dateSInformation = convertDate(eventSDates[i]);
+                let dateEInformation = convertDate(eventEDates[i]);
+
+                let Syear = dateSInformation[0];
+                let Smonth = dateSInformation[1];
+                let Sday = dateSInformation[2];
+                let Stime = dateSInformation[3];
+                let Shour = parseInt(Stime[0] + Stime[1]);
+
+                let Eyear = dateEInformation[0];
+                let Emonth = dateEInformation[1];
+                let Eday = dateEInformation[2];
+                let Etime = dateEInformation[3];
+                let Ehour = parseInt(Etime[0] + Etime[1]);
+
                 if (Smonth == todayMonth) {
                     let addEvent = document.getElementById("d" + Sday);
-                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:"+color+"\">"+eventTitles[i] + " " + Stime +"</p>";
+                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:" + color + "\">" + eventTitles[i] + "</br>" + Stime + " - "+ Etime + "</br>" + professorNames[i]+ "</p>";
                 }
             }
         }
@@ -591,26 +571,30 @@
             dispMonth = changingDate.getMonth()+1;
             dispYear = changingDate.getFullYear();
 
-            let color = "";
             initialiseCalendar();
-            refreshDate();
+            refreshDate(false);
             inactiveDayTimeTable();
 
-            let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
-                let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
-                let eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
-              
-            for (let i = 0; i < @nbEvent; i++) {
-                let r = convertDate(eventSDates[i]);
 
-                let Syear = r[0];
-                let Smonth = r[1];
-                let Sday = r[2];
-                let Stime = r[3];
+            for (let i = 0; i < @nbEvent; i++) {
+                let dateSInformation = convertDate(eventSDates[i]);
+                let dateEInformation = convertDate(eventEDates[i]);
+
+                let Syear = dateSInformation[0];
+                let Smonth = dateSInformation[1];
+                let Sday = dateSInformation[2];
+                let Stime = dateSInformation[3];
+                let Shour = parseInt(Stime[0] + Stime[1]);
+
+                let Eyear = dateEInformation[0];
+                let Emonth = dateEInformation[1];
+                let Eday = dateEInformation[2];
+                let Etime = dateEInformation[3];
+                let Ehour = parseInt(Etime[0] + Etime[1]);
 
                 if (Smonth == dispMonth) {
                     let addEvent = document.getElementById("d" + Sday);
-                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:" + color + "\">" + eventTitles[i] + " " + Stime + "</p>";
+                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:" + color + "\">" + eventTitles[i] + "</br>" + Stime + " - " + Etime + "</br>" + professorNames[i] + "</p>";
                 }
             }
         }
@@ -622,31 +606,37 @@
             dispMonth = changingDate.getMonth() + 1;
             dispYear = changingDate.getFullYear();
 
-            let color = "";
             initialiseCalendar();
-            refreshDate();
+            refreshDate(false);
             inactiveDayTimeTable();
 
-            let eventSDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventStartingDates));
-            let eventEDates = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventEndingDates));
-            let eventTitles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(eventTitles));
-           
-            for (let i = 0; i < @nbEvent; i++) {
-                let r = convertDate(eventSDates[i]);
 
-                let Syear = r[0];
-                let Smonth = r[1];
-                let Sday = r[2];
-                let Stime = r[3];
+            for (let i = 0; i < @nbEvent; i++) {
+                let dateSInformation = convertDate(eventSDates[i]);
+                let dateEInformation = convertDate(eventEDates[i]);
+
+                let Syear = dateSInformation[0];
+                let Smonth = dateSInformation[1];
+                let Sday = dateSInformation[2];
+                let Stime = dateSInformation[3];
+                let Shour = parseInt(Stime[0] + Stime[1]);
+
+                let Eyear = dateEInformation[0];
+                let Emonth = dateEInformation[1];
+                let Eday = dateEInformation[2];
+                let Etime = dateEInformation[3];
+                let Ehour = parseInt(Etime[0] + Etime[1]);
 
                 if (Smonth == dispMonth) {
                     let addEvent = document.getElementById("d" + Sday)
 
-                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:" + color + "\">" + eventTitles[i] + " " + Stime + "</p>";
+                    addEvent.innerHTML += "<p class=\"calendar-date-text\" style=\"color:" + color + "\">" + eventTitles[i] + "</br>" + Stime + " - " + Etime + "</br>" + professorNames[i] + "</p>";
                 }
             }
 
         }
+
+
         //#endregion
 
         //#endregion

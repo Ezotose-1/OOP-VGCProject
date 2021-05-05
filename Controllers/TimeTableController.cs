@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,38 +35,35 @@ namespace OOP_VGCProject.Controllers
             List<string> Descriptions = new List<string>();
             List<DateTime> StartingDates = new List<DateTime>();
             List<DateTime> EndingDates = new List<DateTime>();
-            List<string> ThemesColors = new List<string>();
+            List<string> ProfessorNames = new List<string>();
+            string userId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
 
-            var groupsListsQ = _context.GroupStudentList.Where(x => x.StudentId == _userManager.GetUserAsync(HttpContext.User).Id).ToList();
+            var groupsListsQ = _context.GroupStudentList.Where(x => x.StudentId == userId);
             List<string> groupIdWhereUserIs = new List<string>();
             foreach(var group in groupsListsQ)
             {
                 groupIdWhereUserIs.Add(group.GroupId);
             }
 
-            var coursesQ = _context.Courses.Where(x => groupIdWhereUserIs.Contains(x.GroupId));
+            var coursesQ = await _context.Courses.Where(x => groupIdWhereUserIs.Contains(x.GroupId)).ToListAsync();
             
-
             foreach(var cours in coursesQ)
             {
                 Titles.Add(cours.CourseName);
                 Descriptions.Add(cours.CourseDescription);
                 StartingDates.Add(cours.StartingTime);
                 EndingDates.Add(cours.EndingTime);
+                string professorName = _userManager.FindByIdAsync(cours.FacultyId).Result.UserName;
+                ProfessorNames.Add(professorName);
             }
 
             ViewBag.EventTitles = Titles;
             ViewBag.EventDescriptions = Descriptions;
             ViewBag.EventStartingDates = StartingDates;
             ViewBag.EventEndingDates = EndingDates;
+            ViewBag.ProfessorNames = ProfessorNames;
 
             return View();
-        }
-
-        public void DisplayEvents()
-        {
-            throw new NotImplementedException();
-
         }
     }
 }
