@@ -1,0 +1,41 @@
+﻿@using OOP_VGCProject.Data;
+@using Microsoft.AspNetCore.Identity
+@model OOP_VGCProject.Models.Grades
+@inject UserManager<IdentityUser> UserManager
+
+@{ 
+    ViewData["Title"] = "AssignGrade";
+}
+<style>
+    .democlass {
+        color: red;
+    }
+</style>
+<h1>Assign Grade</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<p>
+    <form onchange="getvalue()">
+        <div class="form-group">
+            <label class="control-label">Student</label>
+            <select id="Student_id" class="form-control" name="Student_id">
+                <option value="">Select a student</option>
+                @foreach (var u in UserManager.Users.ToList())
+                {
+                    <option value="@u.Id">@u</option>
+                }
+            </select>
+        </div>
+
+        <a id="asp">Grade Books</a>
+    </form>
+</p>
+<script>
+    function getvalue() {
+        var parms = document.getElementById('Student_id').value
+        document.getElementById("asp").href = "https://localhost:44389/Grades/Index_of/"+ parms;
+    }
+</script>

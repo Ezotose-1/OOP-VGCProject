@@ -30,6 +30,18 @@ namespace OOP_VGCProject.Controllers
             var GradeList = await _context.Grades.Where(m => m.Student_id == loggedUserId).OrderBy(o => o.Discipline).ToListAsync();
             return View(GradeList);
         }
+        public async Task<IActionResult> Index_of(string id)
+        {
+            var GradeList = await _context.Grades.Where(m => m.Student_id == id).OrderBy(o => o.Discipline).ToListAsync();
+            return View(GradeList);
+        }
+
+        [Authorize(Roles = "Admin, Faculty")]
+        // GET: Grades/Details/5
+        public async Task<IActionResult> AssignGrade()
+        {
+            return View();
+        }
 
         [Authorize(Roles = "Admin, Faculty")]
         // GET: Grades/Details/5
